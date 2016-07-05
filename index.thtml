@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+        <!-- invoice generator, invoice template, invoice -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="description" content="Generate, send and get paid. Elegant invoice template for web and mobile powered by Stripe" />
+        <meta name="keywords" content="invoice generator, invoice template, invoice" />
+        <meta name="author" content="Ugur Kaner">
+        <meta name="robots" content="index, follow">
+        <meta name="revisit-after" content="3 month">
+        <meta name="google-site-verification" content="82gOBDV6yHPsxjRpB5rKZtbvAVVGjGT22Un-871HfSw" />
+        <title>Invoice.to - Invoice Generator</title>
+        <!-- invoice generator, invoice template, invoice -->
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+
+        <script>
+            $(window).load(function() {
+                // Animate loader off screen
+                $(".se-pre-con").fadeOut("slow");;
+            });
+        </script>
+
+        <script src="//rawgit.com/andris9/simpleStorage/master/simpleStorage.js"></script>
+
+        <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic' rel='stylesheet' type='text/css'>
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+        <!-- Menu -->
+        <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+        <link rel="stylesheet" type="text/css" href="css/menu_sideslide.css" />
+        <!-- Menu -->
+
+        <link type="text/css" rel="stylesheet" href="css/style.min.css"/>
+        <link rel="stylesheet" href="css/magnific-popup.css"> 
+
+    </head>
+    <body>
+        <div class="se-pre-con"></div>
+        <div class="container">
+            <!-- Menu -->
+            <div class="menu-wrap">
+                <nav class="menu">
+                    <div class="icon-list" id="icon-list">
+                        <a href="#" id="menuNewInvoice" onclick="clearInvoice();"><i class="fa fa-fw fa-plus-square-o"></i><span>New</span></a>
+                        <!-- a href="#" id="menuGenerateInvoice" onclick="saveToParse()"><i class="fa fa-fw fa-play"></i><span>Generate</span></a-->
+                        <a href="#sendPopup" id="menuSendInvoice" class="openPopupLink" onclick="prepareSendView()"><i class="fa fa-fw fa-paper-plane"></i><span>Send</span></a>
+                        <a href="#" onclick="printInvoice()"><i class="fa fa-fw fa-print"></i><span>Print</span></a>
+                        <a href="https://trello.com/b/9Uhj7bdx/invoice-to" id="trello" target="_blank"><i class="fa fa-fw fa-check-square-o"></i><span>Roadmap</span></a>
+                        <a href="#aboutPopup" id="menuAbout" class="openPopupLink"><i class="fa fa-fw fa-info-circle"></i><span>About</span></a>
+                    </div>
+                </nav>
+                <button class="close-button" id="close-button">Close Menu</button>
+            </div>
+            <button class="menu-button" id="open-button">Open Menu</button>
+            <!-- Menu -->
+            <!-- BETA -->
+            <div style="width:100%; display:none;">
+                <div class="badge" style="position:absolute; right:0.5em; margin:1em; padding:0 0.3em 0 0.3em; z-index:1003; background-color:#FF5E5E; color:white;">
+                    <p>BETA</p>
+                </div>
+            </div>
+            <!-- BETA -->
+            <div class="content-wrap">
+                <div class="content">
+                    <div class="invContainer">
+                        <!-- Start your code here -->
+                        <div class="invBody">
+                            <!-- Header section -->
+                            <div class="invSectionHeader">
+                                <div class="invHeaderItemTitle">
+                                    <p class="invTitle">INVOICE</p>
+                                    <p class="invByName" id="invByName" contenteditable="true" onBlur="saveData($(this))"></p>
+                                </div>
+                                <div class="invHeaderItemDate">
+                                    <p class="invDate" id="invDateTop" contenteditable="true" onBlur="saveData($(this))"></p>
+                                </div>
+                            </div>
+                            <!-- Summary section -->
+                            <div class="invSectionSummary">
+                                <div class="invItemInvTo">
+                                    <p class="componentTitle">INVOICE TO</p>
+                                    <div class="">
+                                        <p id="invToTop" contenteditable="true" onblur="saveData($(this))"></p>
+                                    </div>
+                                </div>
+                                <div class="invItemPaymentSummary">
+                                    <p class="invTotal" id="invTotal">$0.00</p>
+                                    <p id="invTotal_p" style="display:none"></p>
+                                    <p class="invDue">Due on <span id="dueDateTop" contenteditable="true" onblur="saveData($(this))"></span></p>
+                                    <div id="stripeButtons">
+                                        <div id="paidButtonSpan">
+                                            <button class="paidButton" id="paidButton" disabled></button>
+                                        </div>
+                                        <div id="connectButtonSpan">
+                                            <button class="invButtonConnect" id="connectButton">Connect with Stripe</button>
+                                            <script>
+                                                $("#connectButton").click( function() {
+                                                    //window.open(url, '_blank');
+                                                    var url = "https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_5atlLM2xPkC35t8Inzy9niMkIUJqYUuN&scope=read_write&state=1234"
+                                                    window.location.href = url;
+                                                });
+
+                                            </script>
+                                        </div>
+                                        <div id="stripeButtonSpan">
+                                            <form action="<?php echo "charge.php?id=".substr($_SERVER['REQUEST_URI'], 1); ?>"
+                                                  method="post">
+                                                <button class="invButton" type="button" id="customButton">Pay Now</button>
+                                                <script>
+                                                    $('#customButton').click( function() {
+                                                        var token = function(res){
+                                                            var $input = $('<input type=hidden name=stripeToken />').val(res.id);
+                                                            $('form').append($input).submit();
+                                                        };
+
+                                                        var invTotal = parseFloat($("#invTotal").text().substr(1,100))*100;
+                                                        var invFor = $("#invByName").text();
+
+                                                        $('<input />').attr('type', 'hidden')
+                                                            .attr('name', "amount")
+                                                            .attr('value', invCurr)
+                                                            .appendTo('form')
+                                                            .submit();
+
+                                                        $('<input />').attr('type', 'hidden')
+                                                            .attr('name', "currency")
+                                                            .attr('value', invCurr)
+                                                            .appendTo('form')
+                                                            .submit();
+
+                                                        StripeCheckout.open({
+                                                            key:         simpleStorage.get("spk"),
+                                                            amount:      invTotal,
+                                                            currency:    invCurr,
+                                                            name:        'INVOICE',
+                                                            description: invFor,
+                                                            panelLabel:  'Pay Now ',
+                                                            token:       token
+                                                        });
+                                                        return false;
+                                                    }); /////
+                                                </script>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- invoice-for section -->
+                            <div class="invSectionInvoiceFor">
+                                <div class="invFor">
+                                    <p class="invDescTitle componentTitle">INVOICE FOR</p>
+                                    <p id="invFor" contenteditable="true" onblur="saveData($(this))"></p>
+                                </div>
+                            </div>
+                            <!-- Description section -->
+                            <div class="invSectionDesc">
+                                <div class="invDesc">
+                                    <h3 class="titleInvoiceDetails">INVOICE DETAILS</h3>
+                                    <!-- Table begin -->
+                                    <div class="invDescTable">
+                                        <!-- Row begin -->
+                                        <div class="rowTitleContainer">
+                                            <div class="row">
+                                                <div class="col c1 componentTitle">Description</div>
+                                                <div class="col c2 componentTitle">Unit</div>
+                                                <div class="col c3 componentTitle">Price (<span id="currency" class="hint" contenteditable="true" onblur="renderTable(); saveData($(this));">$</span>)</div>
+                                                <div class="col c4 componentTitle">Amount</div>
+                                                <div class="col c5"></div>
+                                            </div>  <!-- Row end -->
+                                        </div>  
+                                        <div class="rowItemContainer">
+                                            <div class="row" id="1">
+                                                <div class="col c1"><p id="itemDesc1" contenteditable="true" onblur="renderTable()" placeholder="&nbsp"></p></div>
+                                                <div class="col c2"><p id="itemHour1" contenteditable="true" onblur="renderTable()" placeholder="&nbsp"></p></div>
+                                                <div class="col c3"><p id="itemPrice1" contenteditable="true" onblur="renderTable()" placeholder="&nbsp"></p></div>
+                                                <div class="col c4"><p id="itemSum1"></p></div>
+                                                <div class="col c5"><p id="delete1"><a href="#" class="icon" onClick="deleteRow($(this))" onblur="renderTable()"><i class="fa fa-times"></i></a></p></div>
+                                            </div> <!-- Row end -->
+                                        </div>
+                                        <div class="row subtotal">
+                                            <div class="col c1"><p>Subtotal</p></div>
+                                            <div class="col c2 hide"><p></p></div>
+                                            <div class="col c3 hide"><p></p></div>
+                                            <div class="col c4"><p id="subtotal"></p></div>
+                                            <div class="col c5"></div>
+                                        </div> <!-- Row end -->
+                                        <div class="row vat">
+                                            <div class="col c1"><p>VAT (<span id="vatp" class="hint" contenteditable="true" onblur="renderTable(); saveData($(this));">10</span>%)</p></div>
+                                            <div class="col c2 hide"><p></p></div>
+                                            <div class="col c3 hide"><p></p></div>
+                                            <div class="col c4"><p id="vat"></p></div>
+                                            <div class="col c5"></div>
+                                        </div> <!-- Row end -->
+                                        <div class="row total">
+                                            <div class="col c1"><p>TOTAL</p></div>
+                                            <div class="col c2 hide"><p></p></div>
+                                            <div class="col c3 hide"><p></p></div>
+                                            <div class="col c4"><p id="total"></p></div>
+                                            <div class="col c5"></div>
+                                        </div> <!-- Row end -->
+                                    </div> <!-- Table end -->
+                                </div>
+                            </div>
+                            <div class="invSectionInfo"> <!-- Invoice section info -->
+                                <div class="invItemInvInfo">
+                                    <div class="invInfoByTo">
+                                        <div class="invInfoBy">
+                                            <div class="componentTitle">Invoice by</div>
+                                            <div class="invBy" id="invBy" contenteditable="true" onblur="saveData($(this))"></div>
+                                        </div>
+                                        <div class="invInfoTo">
+                                            <div class="componentTitle">Invoice to</div>
+                                            <div class="invTo" id="invTo" contenteditable="true" onblur="saveData($(this))"></div>
+                                        </div>
+                                    </div>
+                                    <div class="invInfoContainer"> <!-- info container -->
+                                        <div class="invInfoDetailsCont">
+                                            <div class="invInfoDate">
+                                                <div class="componentTitle">Invoice date</div>
+                                                <div class=""><p contenteditable="true" id="invDate" onblur="saveData($(this))">Jan 1, 2015</p></div>
+                                            </div>
+                                            <div class="invInfoDueDate">
+                                                <div class="componentTitle">Due date</div>
+                                                <div class=""><p id="dueDate" contenteditable="true" onblur="saveData($(this))">Feb 14, 2015</p></div>
+                                            </div>
+                                            <div class="invInfoNo">
+                                                <div class="componentTitle">Invoice number</div>
+                                                <div class=""><p id="invNumber" contenteditable="true" onblur="saveData($(this))"></p></div>
+                                            </div>
+                                            <div class="invInfoOther">
+                                                <div class="componentTitle">Reference no</div>
+                                                <div class=""><p id="invRef" contenteditable="true" onblur="saveData($(this))"></p></div>
+                                            </div>
+
+                                        </div>
+                                        <div class="invInfoPaymentDetails">
+                                            <div class="componentTitle">Payment details</div>
+                                            <div class=""><p id="payDetails" contenteditable="true" onblur="saveData($(this))"></div>
+                                        </div>
+                                        <div class="invTerms">
+                                            <div class="componentTitle">Invoice Terms</div>
+                                            <div class=""><p id="invTerms" contenteditable="true" onblur="saveData($(this))"></p></div>
+                                        </div>
+
+                                    </div> <!-- info container -->
+                                </div>
+                            </div> <!-- Invoice section info -->
+                        </div>
+                    </div>
+                    <!-- Send popup -->
+                    <div id="sendPopup" class="sendPopupStyle mfp-hide">
+                        <div class="fieldsContainer">
+                            <div class="fromToContainer">
+                                <div class="sendFrom">
+                                    <label class="inputLabel">FROM</label>
+                                    <input class="inputField" type="email" id="sendFrom" onBlur="validateField ($(this))"/>
+                                </div>
+                                <div class="fromToIcon"></div>
+                                <div class="sendTo">
+                                    <label class="inputLabel">TO</label>
+                                    <input class="inputField" type="email" id="sendTo" onBlur="validateField ($(this))"/>
+                                </div>
+                            </div>
+                            <div class="emailBody">
+                                <div class="input">
+                                    <label class="inputLabel">
+                                        <span class="inputLabelContent">EMAIL</span>
+                                    </label>
+                                    <p class="textArea" id="emailBody" contenteditable="true">.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="sendButtonContainer">
+                                <button class="invButton" id="sendButton" onclick="sendInvoice()">SEND</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Send popup -->
+                    <!-- About popup -->
+                    <div id="aboutPopup" class="aboutPopupStyle mfp-hide">
+                        <p><br/>Generate, send &amp; get paid. Elegant invoice template for web &amp; mobile.
+                        </p>
+                        <p><br/>Standard Stripe costs apply (2.9% + 30&cent;). No additional fees.
+                        </p>
+                        <p><br/><a href="http://invoice.to" title="Invoice Generator">Invoice.to</a> is <u>experimental</u>. For feedback, reach me at <a href="https://www.twitter.com/ugurkaner" target="_blank">@ugurkaner</a>.</p>   
+                        <p><br/>You can support this project with a simple <a href="http://ctt.ec/t1JZ_" target="_blank">tweet</a> (you can edit before sending).</p>
+                        <p><br/>
+                        </p>
+                    </div> 
+                    <!-- About popup -->
+                    <!-- Footer -->
+                    <div class="footer">
+                        <p>Designed &amp; coded with care in San Francisco
+                            <a href="https://www.twitter.com/ugurkaner" title="Ugur Kaner" target="_blank"> @ugurkaner</a>
+                            <br/>This website is <u>experimental</u>. Use "as is" and at your own risk.
+                            <br/>By using this website you accept <a href="terms.html" target="_blank">Terms &amp; Conditions</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></p>
+                    </div>
+                    <!-- Footer -->
+
+                    <!-- Send confirmation -->
+                    <div id="sendConfirmation" class="sendPopupStyle mfp-hide">
+                        <div class="fieldsContainer">
+                            <div>Your invoce is sent!
+                            </div>
+                            <div class="sendButtonContainer">
+                                <div class="blueButton">DONE</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Send confirmation -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Javascript -->
+        <script type="text/javascript" src="js/script.min.js"></script>
+        <script type="text/javascript" src="js/placeholders.js"></script>
+        <script type="text/javascript" src="js/jquery-numeric.js"></script>
+
+        <script>
+            var spk = "<?=$res->stripe_publishable_key?>";
+            var at = "<?=$res->access_token?>";
+            var su = "<?=$res->stripe_user_id?>";
+            if((spk != "") && (at != "")) {
+                simpleStorage.set("spk", spk);
+                simpleStorage.set("at", at);
+                simpleStorage.set("su", su);
+
+            }
+        </script>
+        <!-- Google Analytics -->
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-59162135-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+        <script type="text/javascript" src="js/jquery.magnific-popup.js"></script>
+
+        <!-- Menu -->
+        <script src="js/classie.js"></script>
+        <script src="js/main.js"></script>
+
+        <script src="//www.parsecdn.com/js/parse-1.3.4.min.js"></script>
+        <script src="//cdn.rawgit.com/visionmedia/page.js/master/page.js"></script>
+        <script type="text/javascript" src="//mandrillapp.com/api/docs/js/mandrill.js"></script>
+        <script src="//checkout.stripe.com/v2/checkout.js"></script>
+    </body>
+</html>

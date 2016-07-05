@@ -1,0 +1,7 @@
+{
+    "require": {
+        "stripe/stripe-php": "^3.13",
+        "mandrill/mandrill": "^1.0",
+        "parse/php-sdk": "^1.2"
+    }
+}

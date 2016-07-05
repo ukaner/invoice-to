@@ -1,0 +1,18 @@
+# html5 pushstate (history) support:
+<ifModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !index
+    RewriteRule (.*) index.php [L,QSA]
+
+#    RewriteCond %{HTTPS} off
+#    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+
+    RewriteCond %{HTTP_HOST} ^www\.(.*)
+    RewriteRule ^.*$ https://%1/$1 [R=301,L]
+
+    DirectoryIndex index.php
+
+</ifModule>
