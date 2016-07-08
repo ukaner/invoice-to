@@ -35,7 +35,7 @@
         <!-- Menu -->
 
         <link type="text/css" rel="stylesheet" href="css/style.min.css"/>
-        <link rel="stylesheet" href="css/magnific-popup.css"> 
+        <link rel="stylesheet" href="css/magnific-popup.css">
 
     </head>
     <body>
@@ -171,7 +171,7 @@
                                                 <div class="col c4 componentTitle">Amount</div>
                                                 <div class="col c5"></div>
                                             </div>  <!-- Row end -->
-                                        </div>  
+                                        </div>
                                         <div class="rowItemContainer">
                                             <div class="row" id="1">
                                                 <div class="col c1"><p id="itemDesc1" contenteditable="true" onblur="renderTable()" placeholder="&nbsp"></p></div>
@@ -286,11 +286,11 @@
                         </p>
                         <p><br/>Standard Stripe costs apply (2.9% + 30&cent;). No additional fees.
                         </p>
-                        <p><br/><a href="http://invoice.to" title="Invoice Generator">Invoice.to</a> is <u>experimental</u>. For feedback, reach me at <a href="https://www.twitter.com/ugurkaner" target="_blank">@ugurkaner</a>.</p>   
+                        <p><br/><a href="http://invoice.to" title="Invoice Generator">Invoice.to</a> is <u>experimental</u>. For feedback, reach me at <a href="https://www.twitter.com/ugurkaner" target="_blank">@ugurkaner</a>.</p>
                         <p><br/>You can support this project with a simple <a href="http://ctt.ec/t1JZ_" target="_blank">tweet</a> (you can edit before sending).</p>
                         <p><br/>
                         </p>
-                    </div> 
+                    </div>
                     <!-- About popup -->
                     <!-- Footer -->
                     <div class="footer">
@@ -317,7 +317,7 @@
         </div>
 
         <!-- Javascript -->
-        <script type="text/javascript" src="js/script.min.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
         <script type="text/javascript" src="js/placeholders.js"></script>
         <script type="text/javascript" src="js/jquery-numeric.js"></script>
 

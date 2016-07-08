@@ -61,7 +61,7 @@ $(document).ready(function () {
         $("#invDate").html(getToday(0));
     if (!simpleStorage.get("#dueDate"))
         $("#dueDate").html(getToday(14));
-    // 
+    //
 
     // Load static data
     for (var i = 0; i < staticDataFields.length; i++) {
@@ -91,7 +91,7 @@ $(document).ready(function () {
                      }
                      */
                     // "proto" variable holds MagnificPopup class prototype
-                    // The above change that we did to instance is not applied to the prototype, 
+                    // The above change that we did to instance is not applied to the prototype,
                     // which allows us to call parent method:
                     $.magnificPopup.proto.close.call(this);
                 };
@@ -463,7 +463,7 @@ function saveToParse(intent) {
 
     $.ajax({
         type: "POST",
-        url: baseURL + "/parse.php",
+        url: baseURL + "/api.php",
         datatype: "JSON",
         data: saveToParse,
         success: function (response) {
@@ -473,7 +473,7 @@ function saveToParse(intent) {
                 console.log(invoice.invId);
                 invoiceID = invoice.invId;
                 if(intent=="send") {
-                    sendMail(invoice.invId);
+                    sendMail(invoice.invId, invoice.parseInvId);
                     return invoice.invId;
                 } else {
                     window.location.href = baseURL + "/" + invoice.invId;
@@ -500,7 +500,7 @@ function loadFromParse(invId) {
 
     $.ajax({
         type: "POST",
-        url: baseURL + "/parse.php",
+        url: baseURL + "/api.php",
         datatype: "JSON",
         data: parseData,
         success: function (response) {
@@ -519,7 +519,7 @@ function loadFromParse(invId) {
                     simpleStorage.set(key, val);
                     $("#" + key).removeAttr('contenteditable');
                     loadData(key);
-                }                
+                }
 
                 // Load table
                 for (var i = 1; i < rowCount; i++) {
@@ -624,7 +624,7 @@ function prepareSendView() {
     $("#emailBody").html(emailCopy);
 }
 
-function sendMail(invId) {
+function sendMail(invId, parseInvId) {
     var mailFrom = $("#sendFrom").val();
     var mailTo = $("#sendTo").val();
     //var mailCC = $("#mailCC").text();
@@ -654,6 +654,7 @@ function sendMail(invId) {
                 var parseData = {
                     type: 'save_email',
                     invId: invId,
+                    parseInvId: parseInvId,
                     senderEmail: mailFrom,
                     receiverEmail: mailTo,
                 };
@@ -662,7 +663,7 @@ function sendMail(invId) {
 
                 $.ajax({
                     type: "POST",
-                    url: baseURL + "/parse.php",
+                    url: baseURL + "/api.php",
                     datatype: "JSON",
                     data: parseData,
                     success: function (response) {
@@ -670,7 +671,7 @@ function sendMail(invId) {
                         if (response) {
                             console.log("Email Saved");
                             window.location.href = baseURL + "/" + invId;
-                        }			
+                        }
                     },
                     error: function () {
                         console.log('Mail send Error');
@@ -691,7 +692,7 @@ function sendSummary() {
     // Prepare copy
     var summary = "This and that";
 
-    // Setup MP    
+    // Setup MP
     $('.sendButton').magnificPopup({
         closeBtnInside: true
     });
@@ -773,7 +774,7 @@ function getToday(days) {
     var mm = today.getMonth() + 1; //January is 0!
     var yyyy = today.getFullYear();
 
-    /*    
+    /*
      if(dd<10) {
      dd='0'+dd
      } */
