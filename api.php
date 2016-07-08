@@ -19,19 +19,19 @@ try {
       break;
 
     case 'create':
-      $res = $mongo->save();
+      $res = $parse->save();
       $invoice = $res['obj'];
 
       // Check if invoice inserted to MongoDB successfully
       if ($res['ok']) {
-        $invId = base64_encode($invoice['_id']->{'$id'});
-        $res = $parse->save();
+        $invId = $res['obj']->getObjectId();
+        $res = $mongo->save($invId);
 
         if ($res['ok']) {
-          die(json_encode([ 'invId' => $invId, 'parseInvId' => $res['obj']->getObjectId() ]));
+          die(json_encode([ 'invId' => base64_encode($res['obj']['_id']->{'$id'}), 'parseInvId' => $invId ]));
         }
 
-        die(json_encode([ 'invId' => base64_encode($invoice['_id']->{'$id'}) ]));
+        die(json_encode([ 'invId' => base64_encode($res['obj']['_id']->{'$id'}) ]));
       }
 
       if ($isDevelopment) {

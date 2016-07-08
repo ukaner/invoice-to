@@ -2,8 +2,9 @@
 require_once 'config.php';
 require_once 'utilities.php';
 require_once('vendor/autoload.php');
-////////
+require_once('mongo.php');
 
+////////
 use Parse\ParseClient;
 ParseClient::initialize(getenv('PARSE_KEY1'), getenv('PARSE_KEY2'), getenv('PARSE_KEY3'));
 
@@ -25,8 +26,7 @@ if ($scope && $code) {
     // We got the scope and code. We'll exchane this with the SPK and AT by running a curl function
     $res = json_decode(postToCurl($stripe_token_url, $post));
 
-
-    if($res->error || $res->error_description) {
+    if(isset($res->error) || isset($res->error_description)) {
         $s = "Error: ".$res->error." - ".$res->error_description;
         //consoleLog($s);
     } else {
@@ -47,6 +47,23 @@ if ($scope && $code) {
                 $old_invoice_model->save();
             }
         }
+
+        $mongo = new MongoInvoice();
+        $collection = $mongo->getCollection();
+        $results = $collection->find([ 'su' => $stripe_user ]);
+
+        // Everytime we need to check SPK and AT for all invoices of a user, in case of possible overrides or invokes
+        foreach ($results as $old_invoice_model) {
+            if (($old_invoice_model['at'] != $accessToken) || ($old_invoice_model['spk'] != $pubKey) ) {
+                $mongo->update($old_invoice_model['_id']->{'$id'}, [
+                    '$set' => [
+                        'at' => $accessToken,
+                        'spk' => $pubKey
+                    ]
+                ]);
+            }
+        }
+
 
         //consoleLog($accessToken);
         //consoleLog($pubKey);

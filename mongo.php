@@ -21,12 +21,17 @@ $collection = $db->selectCollection('invoices');
 
 class MongoInvoice {
 
+  public function getCollection () {
+    global $collection;
+    return $collection;
+  }
+
   public function get ($invId) {
     global $collection;
     return $collection->findOne([ '_id' => new MongoId(base64_decode($invId)) ]);
   }
 
-  public function save () {
+  public function save ($invId) {
     global $collection;
 
     // Get variables
@@ -46,7 +51,8 @@ class MongoInvoice {
       'totalPrice' => $totalPrice,
       'currency' => $currency,
       'paid' => 'false',
-      'rowCount' => $rowCount
+      'rowCount' => $rowCount,
+      'parseInvId' => $invId
     ];
 
     foreach ($staticData as $key => $value) {
@@ -98,6 +104,16 @@ class MongoInvoice {
     );
 
     $res['id'] = base64_decode(get_parameter('invId'));
+    return $res;
+  }
+
+  public function update ($invId, $updatedValues) {
+    global $collection;
+
+    $res = $collection->update([
+      '_id' => new MongoId($invId)
+    ], $updatedValues);
+
     return $res;
   }
 }

@@ -24,4 +24,5 @@ $stripe = array(
 $stripe_token_url = 'https://connect.stripe.com/oauth/token';
 
 \Stripe\Stripe::setApiKey($stripe['secret_key']);
+\Stripe\Stripe::setApiVersion("2016-07-06");
 ?>
