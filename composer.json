@@ -1,9 +1,9 @@
 {
     "require": {
         "parse/php-sdk": "^1.2",
-        "mailgun/mailgun-php": "~2.0",
-        "php-http/guzzle6-adapter": " ^1.0",
-        "stripe/stripe-php": "^3.15",
+        "mailgun/mailgun-php": "~2.1.1",
+        "php-http/guzzle6-adapter": "^1.0",
+        "stripe/stripe-php": "^3.17",
         "ext-mongo": "*"
     }
 }
