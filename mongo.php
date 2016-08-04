@@ -28,6 +28,11 @@ class MongoInvoice {
 
   public function get ($invId) {
     global $collection;
+
+    $parseRecord = $collection->findOne([ 'parseInvId' => $invId ]);
+
+    if (!!$parseRecord) return $parseRecord;
+
     return $collection->findOne([ '_id' => new MongoId(base64_decode($invId)) ]);
   }
 
