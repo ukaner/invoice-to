@@ -125,7 +125,7 @@ function getInvoice(ctx) {
     if (id) {
         idExists = true;
     }
-    loadFromParse(id);
+    loadFromMongo(id);
     renderButtons();
 
     // Change the document title
@@ -394,7 +394,7 @@ function saveData(obj) {
 
 // Parse functions
 
-function saveToParse(intent) {
+function saveToMongo(intent) {
 
     /* INVOICE SAVE TO PARSE AJAX CALL */
     console.log("Saving to Parse");
@@ -432,7 +432,7 @@ function saveToParse(intent) {
         at = simpleStorage.get("at");
         su = simpleStorage.get("su");
 
-        var saveToParse = {
+        var saveToMongo = {
             type: 'create',
             paid: paid,
             staticData: staticData,
@@ -447,7 +447,7 @@ function saveToParse(intent) {
             su: su
         };
     } else {
-        var saveToParse = {
+        var saveToMongo = {
             type: 'create',
             paid: paid,
             staticData: staticData,
@@ -465,7 +465,7 @@ function saveToParse(intent) {
         type: "POST",
         url: baseURL + "/api.php",
         datatype: "JSON",
-        data: saveToParse,
+        data: saveToMongo,
         success: function (response) {
             console.log(response);
             var invoice = JSON.parse(response);
@@ -490,10 +490,10 @@ function saveToParse(intent) {
 
 }
 
-function loadFromParse(invId) {
-    console.log("loading From Parse");
+function loadFromMongo(invId) {
+    console.log("loading From Mongo");
 
-    var parseData = {
+    var mongoData = {
         type: 'get',
         invID: invId.toString()
     };
@@ -502,7 +502,7 @@ function loadFromParse(invId) {
         type: "POST",
         url: baseURL + "/api.php",
         datatype: "JSON",
-        data: parseData,
+        data: mongoData,
         success: function (response) {
             console.log(response);
             if (response) {
@@ -540,7 +540,7 @@ function loadFromParse(invId) {
                 }
 
                 // Load SPK
-                console.log("Setting SPK from Parse")
+                console.log("Setting SPK from Mongo")
                 simpleStorage.set("spk", invoice["spk"]);
 
                 var loadCount = rowCount;
@@ -613,7 +613,7 @@ function prepareSendView() {
     // TODO: From hint
     // TODO: To hint
 
-    // TODO: Check if emailCopy exist in Parse
+    // TODO: Check if emailCopy exist in Mongo
     var emailCopy = "<p>Hi <span class=\"textHighlight\">there</span>,</p><br/>" +
         "<p>Was pleasure working with you on <span class=\"textHighlight\">" + $("#invFor").html() + "</span>. Appreciate your business and timely payment.</p><br/>" +
         // TODO: Insert invoice URL here
@@ -651,7 +651,7 @@ function sendMail(invId, parseInvId) {
             if (response) {
                 console.log("Message Sent");
 
-                var parseData = {
+                var mongoData = {
                     type: 'save_email',
                     invId: invId,
                     parseInvId: parseInvId,
@@ -659,13 +659,13 @@ function sendMail(invId, parseInvId) {
                     receiverEmail: mailTo,
                 };
 
-                console.log("Save Emails to parse");
+                console.log("Save Emails to mongo");
 
                 $.ajax({
                     type: "POST",
                     url: baseURL + "/api.php",
                     datatype: "JSON",
-                    data: parseData,
+                    data: mongoData,
                     success: function (response) {
                         console.log(response);
                         if (response) {
@@ -716,7 +716,7 @@ function sendInvoice() {
         validateField($("#sendFrom"));
         validateField($("#sendTo"));
     } else {
-        invoiceID = saveToParse("send"); // Sends email here
+        invoiceID = saveToMongo("send"); // Sends email here
     }
 
     $("#sendButton").prop("disabled", false);

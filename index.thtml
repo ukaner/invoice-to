@@ -46,7 +46,6 @@
                 <nav class="menu">
                     <div class="icon-list" id="icon-list">
                         <a href="#" id="menuNewInvoice" onclick="clearInvoice();"><i class="fa fa-fw fa-plus-square-o"></i><span>New</span></a>
-                        <!-- a href="#" id="menuGenerateInvoice" onclick="saveToParse()"><i class="fa fa-fw fa-play"></i><span>Generate</span></a-->
                         <a href="#sendPopup" id="menuSendInvoice" class="openPopupLink" onclick="prepareSendView()"><i class="fa fa-fw fa-paper-plane"></i><span>Send</span></a>
                         <a href="#" onclick="printInvoice()"><i class="fa fa-fw fa-print"></i><span>Print</span></a>
                         <a href="https://trello.com/b/9Uhj7bdx/invoice-to" id="trello" target="_blank"><i class="fa fa-fw fa-check-square-o"></i><span>Roadmap</span></a>
@@ -322,15 +321,16 @@
         <script type="text/javascript" src="js/jquery-numeric.js"></script>
 
         <script>
-            var spk = "<?=$res->stripe_publishable_key?>";
-            var at = "<?=$res->access_token?>";
-            var su = "<?=$res->stripe_user_id?>";
-            if((spk != "") && (at != "")) {
-                simpleStorage.set("spk", spk);
-                simpleStorage.set("at", at);
-                simpleStorage.set("su", su);
-
-            }
+            <?php if (isset($res)) { ?>
+                var spk = "<?=$res->stripe_publishable_key?>";
+                var at = "<?=$res->access_token?>";
+                var su = "<?=$res->stripe_user_id?>";
+                if ((spk != "") && (at != "")) {
+                    simpleStorage.set("spk", spk);
+                    simpleStorage.set("at", at);
+                    simpleStorage.set("su", su);
+                }
+            <?php } ?>
         </script>
         <!-- Google Analytics -->
         <script>
@@ -349,7 +349,6 @@
         <script src="js/classie.js"></script>
         <script src="js/main.js"></script>
 
-        <script src="//www.parsecdn.com/js/parse-1.3.4.min.js"></script>
         <script src="//cdn.rawgit.com/visionmedia/page.js/master/page.js"></script>
         <script type="text/javascript" src="//mandrillapp.com/api/docs/js/mandrill.js"></script>
         <script src="//checkout.stripe.com/v2/checkout.js"></script>

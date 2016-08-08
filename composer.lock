@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8eda6bc5c1bb5ac5a6084a7ae02485c2",
-    "content-hash": "64c8e092740c1be38a6942d9e6a76a07",
+    "hash": "e7f9ee996bdf6f585c95d7cefefce852",
+    "content-hash": "56e8d6f44af5c8c62d235281d22055ed",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -273,57 +273,52 @@
             "time": "2016-07-21 08:54:55"
         },
         {
-            "name": "parse/php-sdk",
-            "version": "1.2.1",
+            "name": "paragonie/random_compat",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ParsePlatform/parse-php-sdk.git",
-                "reference": "c4f227ae396afa5e2759c95d3a4848f0b13154c2"
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "088c04e2f261c33bed6ca5245491cfca69195ccf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ParsePlatform/parse-php-sdk/zipball/c4f227ae396afa5e2759c95d3a4848f0b13154c2",
-                "reference": "c4f227ae396afa5e2759c95d3a4848f0b13154c2",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/088c04e2f261c33bed6ca5245491cfca69195ccf",
+                "reference": "088c04e2f261c33bed6ca5245491cfca69195ccf",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": ">=5.4.0"
+                "php": ">=5.2.0"
             },
             "require-dev": {
-                "phpdocumentor/phpdocumentor": "~2.5",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "~1.5"
+                "phpunit/phpunit": "4.*|5.*"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1-dev"
-                }
-            },
             "autoload": {
-                "psr-4": {
-                    "Parse\\": "src/Parse/"
-                }
+                "files": [
+                    "lib/random.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Parse Platform License"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "Parse",
-                    "homepage": "https://github.com/parseplatform/parse-php-sdk/contributors"
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
                 }
             ],
-            "description": "Parse PHP SDK",
-            "homepage": "https://github.com/parseplatform/parse-php-sdk",
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
             "keywords": [
-                "parse",
-                "sdk"
+                "csprng",
+                "pseudorandom",
+                "random"
             ],
-            "time": "2016-07-01 23:38:47"
+            "time": "2016-04-03 06:00:07"
         },
         {
             "name": "php-http/discovery",
@@ -727,16 +722,16 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
-                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
                 "shasum": ""
             },
             "require": {
@@ -764,6 +759,7 @@
                 }
             ],
             "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
             "keywords": [
                 "http",
                 "http-message",
@@ -772,20 +768,20 @@
                 "request",
                 "response"
             ],
-            "time": "2015-05-04 20:22:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v3.17.0",
+            "version": "v3.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "982b90dcbc9cfd59057db8819a247c6db18df6cd"
+                "reference": "113d1092833e1cd17f67b3b598a39e4ebb82e53c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/982b90dcbc9cfd59057db8819a247c6db18df6cd",
-                "reference": "982b90dcbc9cfd59057db8819a247c6db18df6cd",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/113d1092833e1cd17f67b3b598a39e4ebb82e53c",
+                "reference": "113d1092833e1cd17f67b3b598a39e4ebb82e53c",
                 "shasum": ""
             },
             "require": {
@@ -827,7 +823,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2016-07-14 17:36:41"
+            "time": "2016-07-29 18:25:24"
         }
     ],
     "packages-dev": [],

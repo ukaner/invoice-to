@@ -7,9 +7,6 @@ require_once('mongo.php');
 
 $invoice_id = get_parameter('id');
 
-use Parse\ParseClient;
-use Parse\ParseQuery;
-
 use Stripe\Stripe;
 use Stripe\Customer;
 use Stripe\Charge;
@@ -19,24 +16,12 @@ use Stripe\AuthenticationError;
 use Stripe\InvalidRequestError;
 use Stripe\ApiConnectionError;
 
-ParseClient::initialize(getenv('PARSE_KEY1'), getenv('PARSE_KEY2'), getenv('PARSE_KEY3'));
-
-
-// Get sk from Parse
-
 try {
     $mongo = new MongoInvoice();
     $invoice = $mongo->get($invoice_id);
     $sk = $invoice["at"];
     $totalPrice = $invoice['totalPrice'];
     $currency = getCurrency($invoice['currency']);
-
-
-    $query = new ParseQuery("Invoice");
-    $parseInvoice = $query->get($invoice['parseInvId']);
-    $sk = $parseInvoice->get("at");
-    $totalPrice = $parseInvoice->get('totalPrice');
-    $currency = getCurrency($parseInvoice->get('currency'));
 
     if ($sk != "") {
         // Set Stripe sk
@@ -70,10 +55,6 @@ try {
                         'paymentDate' => '' . $charge->created
                     ]
                 ]);
-
-                $parseInvoice->set("paid", "true");
-                $parseInvoice->set("paymentDate", "" . $charge->created);
-                $parseInvoice->save();
                 // Redirect to the invoice itself -- Button will render 'paid'
                 header("Location:/" . $invoice_id); // Redirect to
             } else {
@@ -130,11 +111,8 @@ try {
         echo '<h1>Error: No such SK!</h1>';
     }
 
-} catch (ParseException $ex) {
+} catch (Exception $ex) {
     die (print_r($ex));
-    // The object was not retrieved successfully.
-    // error is a ParseException with an error code and message.
-    //consoleLog("Error retrieving Invoice ID");
 }
 // Set your secret key: remember to change this to your live secret key in production
 // See your keys here https://dashboard.stripe.com/account

@@ -5,12 +5,26 @@ require_once('vendor/autoload.php');
 require_once('utilities.php');
 require_once('ChromePhp.php');
 require_once('mongo.php'); // Loading our MongoDB wrapper
-require_once('parse.php'); // Loading our Parse wrapper
+
+
+function newObjectId ($size) {
+  $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
+           'abcdefghijklmnopqrstuvwxyz' .
+           '0123456789';
+
+  $objectId = '';
+  $bytes = random_bytes($size);
+
+  for ($i = 0; $i < strlen($bytes); ++$i) {
+    $index = unpack('C', $bytes[$i])[1] % strlen($chars);
+    $objectId .= $chars[$index];
+  }
+  return $objectId;
+}
 
 
 try {
   $mongo = new MongoInvoice();
-  $parse = new ParseInvoice();
 
   switch (get_parameter('type')) {
     case 'get':
@@ -19,19 +33,11 @@ try {
       break;
 
     case 'create':
-      $res = $parse->save();
-      $invoice = $res['obj'];
+      $invId = newObjectId(10);
+      $res = $mongo->save($invId);
 
-      // Check if invoice inserted to MongoDB successfully
       if ($res['ok']) {
-        $invId = $res['obj']->getObjectId();
-        $res = $mongo->save($invId);
-
-        if ($res['ok']) {
-          die(json_encode([ 'invId' => base64_encode($res['obj']['_id']->{'$id'}), 'parseInvId' => $invId ]));
-        }
-
-        die(json_encode([ 'invId' => base64_encode($res['obj']['_id']->{'$id'}) ]));
+        die(json_encode([ 'invId' => $invId, 'parseInvId' => $invId ]));
       }
 
       if ($isDevelopment) {
@@ -43,11 +49,10 @@ try {
 
     case 'save_email':
       $res = $mongo->save_email();
-      $invId = $res['id'];
+      $invId = $res['parseInvId'];
 
       // Check if invoice inserted to MongoDB successfully
       if ($res['ok']) {
-        $parse->save_email();
         die(json_encode([ 'invId' => $invId ]));
       }
 
