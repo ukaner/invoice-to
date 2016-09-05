@@ -6,7 +6,8 @@ require_once('utilities.php');
 require_once('ChromePhp.php');
 require_once('mongo.php'); // Loading our MongoDB wrapper
 
-
+// Generates a new invitation ID using
+// the same algorithm as Parse.
 function newObjectId ($size) {
   $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' .
            'abcdefghijklmnopqrstuvwxyz' .
@@ -24,14 +25,17 @@ function newObjectId ($size) {
 
 
 try {
+  // Initialize library
   $mongo = new MongoInvoice();
 
   switch (get_parameter('type')) {
+    // Returns information of the invoice that has given invitation ID
     case 'get':
       $res = $mongo->get(get_parameter('invID'));
       die(json_encode($res));
       break;
 
+    // Creates a new invoice with information from GET parameters
     case 'create':
       $invId = newObjectId(10);
       $res = $mongo->save($invId);
@@ -47,6 +51,7 @@ try {
       }
       break;
 
+    // Saves receiver and sender mail addresses to database
     case 'save_email':
       $res = $mongo->save_email();
       $invId = $res['invId'];

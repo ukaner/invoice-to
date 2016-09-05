@@ -26,6 +26,8 @@ class MongoInvoice {
     return $collection;
   }
 
+  // Accepts both Parse-like IDs and Mongo IDs and
+  // returns the corresponding invoice
   public function get ($invId) {
     global $collection;
 
@@ -64,6 +66,7 @@ class MongoInvoice {
       $invoice[$key] = $value;
     }
 
+    // items the client is charged for
     for ($i = 0; $i <= $rowCount; $i++) {
       $postfix = $i + 1;
 
@@ -90,11 +93,13 @@ class MongoInvoice {
     if ($at != '') $invoice['at'] = $at;
     if ($su != '') $invoice['su'] = $su;
 
+    // Inserting final object to database
     $res = $collection->insert($invoice);
     $res['obj'] = $invoice;
     return $res;
   }
 
+  // Saves receiver and sender mail addresses after an invoice is mailed.
   public function save_email () {
     global $collection;
 

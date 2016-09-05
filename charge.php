@@ -18,6 +18,7 @@ use Stripe\ApiConnectionError;
 
 try {
     $mongo = new MongoInvoice();
+    // Find invoice
     $invoice = $mongo->get($invoice_id);
     $sk = $invoice["at"];
     $totalPrice = $invoice['totalPrice'];
@@ -32,11 +33,13 @@ try {
         $email = isset($_POST['stripeEmail']) ? $_POST['stripeEmail'] : '';
 
         try {
+            // Create a new customer at Stripe
             $customer = Customer::create(array(
                 'email' => $email,
                 'card' => $token
             ));
 
+            // Charge the customer over Stripe
             $charge = Charge::create(array(
                 'customer' => $customer->id,
                 'amount' => $totalPrice * 100,
