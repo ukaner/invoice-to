@@ -37,7 +37,7 @@ try {
       $res = $mongo->save($invId);
 
       if ($res['ok']) {
-        die(json_encode([ 'invId' => $invId, 'parseInvId' => $invId ]));
+        die(json_encode([ 'invId' => $invId ]));
       }
 
       if ($isDevelopment) {
@@ -49,7 +49,7 @@ try {
 
     case 'save_email':
       $res = $mongo->save_email();
-      $invId = $res['parseInvId'];
+      $invId = $res['invId'];
 
       // Check if invoice inserted to MongoDB successfully
       if ($res['ok']) {

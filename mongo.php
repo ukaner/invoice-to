@@ -29,7 +29,7 @@ class MongoInvoice {
   public function get ($invId) {
     global $collection;
 
-    $parseRecord = $collection->findOne([ 'parseInvId' => $invId ]);
+    $parseRecord = $collection->findOne([ 'invId' => $invId ]);
 
     if (!!$parseRecord) return $parseRecord;
 
@@ -57,7 +57,7 @@ class MongoInvoice {
       'currency' => $currency,
       'paid' => 'false',
       'rowCount' => $rowCount,
-      'parseInvId' => $invId
+      'invId' => $invId
     ];
 
     foreach ($staticData as $key => $value) {

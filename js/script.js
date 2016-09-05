@@ -396,8 +396,8 @@ function saveData(obj) {
 
 function saveToMongo(intent) {
 
-    /* INVOICE SAVE TO PARSE AJAX CALL */
-    console.log("Saving to Parse");
+    /* INVOICE SAVE TO MONGO AJAX CALL */
+    console.log("Saving to Mongo");
 
     // SHAMIM --> Set "paid" to "false". Check if correct.
     var paid = "false";
@@ -473,7 +473,7 @@ function saveToMongo(intent) {
                 console.log(invoice.invId);
                 invoiceID = invoice.invId;
                 if(intent=="send") {
-                    sendMail(invoice.invId, invoice.parseInvId);
+                    sendMail(invoice.invId);
                     return invoice.invId;
                 } else {
                     window.location.href = baseURL + "/" + invoice.invId;
@@ -624,7 +624,7 @@ function prepareSendView() {
     $("#emailBody").html(emailCopy);
 }
 
-function sendMail(invId, parseInvId) {
+function sendMail(invId) {
     var mailFrom = $("#sendFrom").val();
     var mailTo = $("#sendTo").val();
     //var mailCC = $("#mailCC").text();
@@ -654,7 +654,6 @@ function sendMail(invId, parseInvId) {
                 var mongoData = {
                     type: 'save_email',
                     invId: invId,
-                    parseInvId: parseInvId,
                     senderEmail: mailFrom,
                     receiverEmail: mailTo,
                 };
