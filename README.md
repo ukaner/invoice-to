@@ -22,7 +22,45 @@ You will need to set up environment variables listed below:
 - `STRIPE_SECRET_KEY` and `STRIPE_PUBLISHABLE_KEY` are keys necessary for Stripe to work. You can get those API keys from your Stripe account. 
 - `MAILGUN_KEY` and `MAILGUN_DOMAIN` are given to you when you set up a Mailgun account. It is free to send 10.000 mails every month so a free account should be enough to test your developments.
 
-## Contributing to Invoice.to
+## Development
+
+Setting up local development environment requires you to install MongoDB. [This link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/) explains how to do it in Mac OS X. If you already have Homebrew installed on your system you can simply type `brew install mongodb` on your terminal to have it installed. After that, MongoDB has to be started. MongoDB needs you to specify a folder to store its data. Tutorial suggests `/data/db` path. So basically you need to create that folder and type `sudo mongod --dbpath /data/db`.
+
+Now you need to set up Apache. Mac OS X comes with `apachectl`. You can type `sudo apachectl start` on terminal to start running it. You need to configure virtual hosts. Add following code to `/etc/apache2/extra/httpd-vhosts.conf`.
+
+```
+<VirtualHost *:80>
+    ServerAdmin john.doe@example.com
+    DocumentRoot "<DIRECTORY_LOCATION>"
+    ServerName invoice.to
+    ServerAlias invoice.to
+
+    SetEnv MONGODB_URI "127.0.0.1:27017/invoiceto"
+    SetEnv STRIPE_SECRET_KEY "<your_stripe_secret_key>"
+    SetEnv STRIPE_PUBLISHABLE_KEY "<your_stripe_publishable_key>"
+    SetEnv PARSE_KEY1 "<parse_key1>"
+    SetEnv PARSE_KEY2 "<parse_key2>"
+    SetEnv PARSE_KEY3 "<parse_key3>"
+    SetEnv MAILGUN_KEY "<your_mailgun_key>"
+    SetEnv MAILGUN_DOMAIN "<your_mailgun_domain>"
+    SetEnv PHP_ENV "development"
+
+    <Directory "<DIRECTORY_LOCATION>">
+         Order allow,deny
+         Allow from all
+         Require all granted
+         AllowOverride All
+    </Directory>
+</VirtualHost>
+```
+
+Don't forget to replace `<DIRECTORY_LOCATION>` with the location of invoice.to directory in your system. For example `/srv/www/invoice-to`. Then open up `/etc/apache2/httpd.conf` in your favourite text editor. You will find following line:
+
+`#LoadModule vhost_alias_module libexec/apache2/mod_vhost_alias.so`
+
+Remove `#` letter at the beginning and save the file. Finally restart the Apache by typing `sudo apachectl restart`.
+
+## Contributing
 
 ### Issue Contributions
 
