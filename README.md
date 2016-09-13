@@ -1,6 +1,6 @@
 # Invoice.to
 
-This repository is the source code of [invoice.to](https://invoice.to), an online service that helps you generate invoice, send them to your clients and receive payments. Contributions to this project are welcome.
+This repository is the source code of [invoice.to](https://invoice.to), an online service that helps you generate invoices, send them to your clients and receive payments. Contributions to this project are welcome.
 
 ## Installation
 
@@ -74,7 +74,7 @@ Writing good commit logs is important. A commit log should describe what changed
 If your patch fixes an open issue, you can add a reference to it at the end
 of the log. Use the `Fixes:` prefix and the full issue URL. For example:
 
-```js
+```
 Fixes: https://github.com/ukaner/invoice-to/issues/123
 ```
 
@@ -93,6 +93,6 @@ $ git rebase upstream/master
 $ git push origin my-branch
 ```
 
-Go to https://github.com/<username>/invoice-to and select your branch. Click the `Pull Request` button and fill out the form.
+Go to `https://github.com/<username>/invoice-to` and select your branch. Click the `Pull Request` button and fill out the form.
 
 Pull requests are usually reviewed within a few days. If there are comments to address, apply your changes in a separate commit and push that to your branch.
