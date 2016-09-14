@@ -1,0 +1,21 @@
+version: "2"
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    links:
+      - mongo
+    volumes:
+      - .:/var/www/html/
+    environment:
+      - MONGODB_URI=mongo:27017/invoiceto
+      - STRIPE_SECRET_KEY=<your_stripe_secret_key>
+      - STRIPE_PUBLISHABLE_KEY=<your_stripe_publishable_key>
+      - MAILGUN_KEY=key-<your_mailgun_key>
+      - MAILGUN_DOMAIN=<your_mailgun_domain>
+      - PHP_ENV=development
+  mongo:
+    image: mongo:3.2
+    ports:
+      - "27017:27017"

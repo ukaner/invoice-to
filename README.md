@@ -9,9 +9,9 @@ Invoice.to is built with PHP and MongoDB, so make sure you have those installed 
 Assuming you have current versions of PHP and MongoDB in your system already, you need to clone the code and install PHP dependencies. Invoice.to uses `composer` for dependency management. If you don't have `composer` already, you can [follow this installation guide](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx). If you already have `composer`, let's continue.
 
 ```sh
-git clone https://github.com/ukaner/invoice-to.git
-cd invoice-to
-composer install
+$ git clone https://github.com/ukaner/invoice-to.git
+$ cd invoice-to
+$ composer install
 ```
 
 Production keys of services that invoice.to uses are not in the code. Instead system receives them from environment variables.
@@ -23,6 +23,20 @@ You will need to set up environment variables listed below:
 - `MAILGUN_KEY` and `MAILGUN_DOMAIN` are given to you when you set up a Mailgun account. It is free to send 10.000 mails every month so a free account should be enough to test your developments.
 
 ## Development
+
+You can set up development environment for Invoice.to either using Apache, PHP and MongoDB installed on your machine, or using [Docker](https://www.docker.com/).
+
+### Using Docker
+
+Make sure you have [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
+
+Set the environment variables in `docker-compose.yml` and run the containers: 
+
+```sh
+$ docker-compose up
+```
+
+### Using local Apache, PHP and MongoDB
 
 Setting up local development environment requires you to install MongoDB. [This link](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/) explains how to do it in Mac OS X. If you already have Homebrew installed on your system you can simply type `brew install mongodb` on your terminal to have it installed. After that, MongoDB has to be started. MongoDB needs you to specify a folder to store its data. Tutorial suggests `/data/db` path. So basically you need to create that folder and type `sudo mongod --dbpath /data/db`.
 
