@@ -104,8 +104,8 @@ $(document).ready(function () {
     });
 
     // Limit numeric fields
-    $("#itemHour1").numeric();
-    $("#itemPrice1").numeric();
+    $("#itemHour1").numeric({negative: false});
+    $("#itemPrice1").numeric({negative: false});
 
     $("#invByName").focus();
 
@@ -115,10 +115,10 @@ $(document).ready(function () {
 
 window.onbeforeunload = function () {
     //simpleStorage.flush();
-}
+};
 
 function getInvoice(ctx) {
-    console.log("Flushing")
+    console.log("Flushing");
     simpleStorage.flush();
 
     var id = ctx.params.id;
@@ -135,24 +135,13 @@ function getInvoice(ctx) {
     $('meta[name=robots]').attr('content', 'noindex');
 }
 
-/*
- function getParameterByName(name) {
- name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
- var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
- results = regex.exec(location.search);
- return results === null ? false : decodeURIComponent(results[1].replace(/\+/g, " "));
- }
- */
-
 function main() {
     console.log("main page");
-
     renderButtons();
-
 }
 
 function connect() {
-    console.log("Connect")
+    console.log("Connect");
     window.location.href = baseURL;
 }
 
@@ -209,8 +198,6 @@ function loadData(id) {
         var val = simpleStorage.get(id);
         var html = $.parseHTML(val);
         $("#" + id).html(html);
-    } else {
-        //$("#" + id).html("");
     }
 }
 
@@ -240,11 +227,11 @@ function addNewRow() {
     $("#itemSum" + rowCount).text("");
 
     // Restrict to numeric
-    $("#itemHour" + rowCount).numeric();
-    $("#itemPrice" + rowCount).numeric();
+    $("#itemHour" + rowCount).numeric({negative: false});
+    $("#itemPrice" + rowCount).numeric({negative: false});
 
     // Adjust delete icon, show previous, hide current
-    $("#delete" + (rowCount - 1)).show()
+    $("#delete" + (rowCount - 1)).show();
     $("#delete" + rowCount).hide();
 
 }
@@ -278,23 +265,15 @@ function loadTable(count) {
 
         if (desc || hour || price) {
             addNewRow();
-            //$("#"+i).remove();
         }
     }
 }
 
 function isRowEmpty(row_num) {
-    //if ($("#itemDesc" + row_num).html() || $("#itemHour" + row_num).text() || $("#itemPrice" + row_num).text())
-    //  return true;
-
     var desc = $("#itemDesc" + row_num).html().length;
     var hour = $("#itemHour" + row_num).text().length;
     var price = $("#itemPrice" + row_num).text().length;
-
-    if (desc + hour + price > 0)
-        return false;
-    else
-        return true;
+    return desc + hour + price <= 0;
 }
 
 
@@ -773,11 +752,6 @@ function getToday(days) {
     var mm = today.getMonth() + 1; //January is 0!
     var yyyy = today.getFullYear();
 
-    /*
-     if(dd<10) {
-     dd='0'+dd
-     } */
-
     if (mm < 10) {
         mm = '0' + mm
     }
@@ -829,7 +803,6 @@ function isValidEmailAddress(emailAddress) {
     var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
     return pattern.test(emailAddress);
 }
-;
 
 function shake(arg) {
     TweenMax.fromTo(arg, 0.01, {x: -2}, {x: 2, clearProps: "x", repeat: 20})
@@ -843,14 +816,5 @@ function validateField(field) {
     } else {
         field.addClass("inputField");
         field.removeClass("inputFieldError");
-    }
-}
-
-function isValidNumber(num) {
-    if (!$.isNumeric(num.text())) {
-        field.addClass("errorHighlight");
-        shake(field);
-    } else {
-        field.removeClass("errorHighlight");
     }
 }

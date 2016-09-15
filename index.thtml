@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html>
     <head>
-        <!-- invoice generator, invoice template, invoice -->
+        <title>Invoice.to - Invoice Generator</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="description" content="Generate, send and get paid. Elegant invoice template for web and mobile powered by Stripe" />
@@ -10,8 +10,6 @@
         <meta name="robots" content="index, follow">
         <meta name="revisit-after" content="3 month">
         <meta name="google-site-verification" content="82gOBDV6yHPsxjRpB5rKZtbvAVVGjGT22Un-871HfSw" />
-        <title>Invoice.to - Invoice Generator</title>
-        <!-- invoice generator, invoice template, invoice -->
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
@@ -318,7 +316,7 @@
         <!-- Javascript -->
         <script type="text/javascript" src="js/script.js"></script>
         <script type="text/javascript" src="js/placeholders.js"></script>
-        <script type="text/javascript" src="js/jquery-numeric.js"></script>
+        <script type="text/javascript" src="js/jquery.numeric.js"></script>
 
         <script>
             <?php if (isset($res)) { ?>
