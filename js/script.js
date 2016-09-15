@@ -707,24 +707,13 @@ function prepareEmailBody(html) {
 }
 
 function printInvoice() {
-    //////////
-    // hide menu stuff
-    console.log("hiding");
-    $(".menu-wrap").hide();
-
-    console.log("hiding");
-    $(".menu-button").hide();
-
-    $(".invBody").css({"min-width":"0"});
-    $(".invBody").css({"width":"90%"});
-    $(".invContainer").css({"margin":"20px auto 10px auto"});
+    // $(".invBody").css("min-width", "0");
+    // $(".invBody").css("width", "90%");
+    // $(".invContainer").css("margin", "20px auto 10px auto");
 
     setTimeout(function () {
         window.print();
     }, 1000);
-
-    $(".menu-wrap").show();
-    $(".menu-button").show();
 }
 
 function charge() {

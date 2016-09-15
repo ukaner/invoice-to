@@ -107,7 +107,7 @@ p {
 }
 .invDue {
     color: #E67E22;
-    margin: 10px;
+    margin: 10px 0;
 }
 .invPayButton {
     text-align: center;
@@ -581,6 +581,32 @@ p {
 }
 
 /* MEDIA QUERIES */
+
+@media print {
+    .menu-wrap,
+    .menu-button,
+    .invButtonConnect,
+    .col.c5 > * {
+        display: none !important;
+    }
+    .col > * {
+        padding: 0.1em !important;
+    }
+    .invContainer,
+    .invBody {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+    .invItemPaymentSummary {
+        text-align: right;
+    }
+    .footer .tc,
+    .footer .experimental-notice {
+        display: none !important;
+    }
+}
+
 @media only screen and (max-width: 970px) {
     .menu-button {
         margin: 0.7em;

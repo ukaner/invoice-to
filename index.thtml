@@ -291,10 +291,10 @@
                     <!-- About popup -->
                     <!-- Footer -->
                     <div class="footer">
-                        <p>Designed &amp; coded with care in San Francisco
-                            <a href="https://www.twitter.com/ugurkaner" title="Ugur Kaner" target="_blank"> @ugurkaner</a>
-                            <br/>This website is <u>experimental</u>. Use "as is" and at your own risk.
-                            <br/>By using this website you accept <a href="terms.html" target="_blank">Terms &amp; Conditions</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></p>
+                        <p>Designed &amp; coded with care in San Francisco <a href="https://www.twitter.com/ugurkaner" title="Ugur Kaner" target="_blank"> @ugurkaner</a>
+                            <span class="experimental-notice"><br/>This website is <u>experimental</u>. Use "as is" and at your own risk.</span>
+                            <span class="tc"><br/>By using this website you accept <a href="terms.html" target="_blank">Terms &amp; Conditions</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></span>
+                        </p>
                     </div>
                     <!-- Footer -->
 
