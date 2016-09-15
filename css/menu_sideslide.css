@@ -1,6 +1,6 @@
-html, 
-body, 
-.container, 
+html,
+body,
+.container,
 .content-wrap {
 	overflow: hidden;
 	width: 100%;
@@ -128,7 +128,7 @@ body,
 	transition-timing-function: cubic-bezier(0.7,0,0.3,1);
 }
 
-.menu, 
+.menu,
 .icon-list {
 	height: 100%;
     padding-left: 1em;
@@ -186,8 +186,8 @@ body,
 
 /* Shown menu */
 .show-menu .menu-wrap {
-	-webkit-transform: translate3d(0,0,0);
-	transform: translate3d(0,0,0);
+	-webkit-transform: translate(0,0);
+	transform: translate(0,0);
 	-webkit-transition: -webkit-transform 0.8s;
 	transition: transform 0.8s;
 	-webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);

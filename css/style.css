@@ -431,32 +431,6 @@ p {
     transition: background-color 0.15s, -webkit-transform 0.15s ease-out;
 }
 
-.mfp-fade.mfp-bg {
-    opacity: 0;
-    transition: all 0.15s ease-out;
-}
-
-.mfp-fade.mfp-bg.mfp-ready {
-    opacity: 0.8;
-}
-.mfp-fade.mfp-bg.mfp-removing {
-    opacity: 0;
-}
-
-/* content at start */
-.mfp-fade.mfp-wrap .mfp-content {
-    opacity: 0;
-    transition: all 0.15s ease-out;
-}
-/* content animate it */
-.mfp-fade.mfp-wrap.mfp-ready .mfp-content {
-    opacity: 1;
-}
-/* content animate out */
-.mfp-fade.mfp-wrap.mfp-removing .mfp-content {
-    opacity: 0;
-}
-
 .invButton:hover { 
     background-color: #61A563;
 }
