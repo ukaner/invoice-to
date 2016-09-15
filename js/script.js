@@ -1,4 +1,3 @@
-/* Write JavaScript here */
 var currency = $("#currency").text();
 var baseURL = window.location.origin;
 var invoiceID;
@@ -6,8 +5,6 @@ var flag = false;
 var idExists = false;
 var invCurr;
 
-// Overwrite console.log
-//console.log = function() {}
 
 // A quick hack to stop elements to flicker
 document.write('<style type="text/css">body{display:none}</style>');
@@ -78,23 +75,13 @@ $(document).ready(function () {
     }
     renderTable();
     $(".openPopupLink").magnificPopup({
-        type: 'inline',
-        mainClass: 'mfp-fade',
-        overflowY: 'scroll',
         callbacks: {
-            open: function () {
-                // this part overrides "close" method in MagnificPopup object
-                $.magnificPopup.instance.close = function () {
-                    /*
-                     if (!confirm("Once sent, you can not alter the invoice. \n Are you sure?")) {
-                     return;
-                     }
-                     */
-                    // "proto" variable holds MagnificPopup class prototype
-                    // The above change that we did to instance is not applied to the prototype,
-                    // which allows us to call parent method:
-                    $.magnificPopup.proto.close.call(this);
-                };
+            close: function() {
+                /* Fixes FF regression issue */
+                $(".menu-wrap").hide();
+                setTimeout(function() {
+                    $(".menu-wrap").show();
+                }, 100);
             }
         }
     });
