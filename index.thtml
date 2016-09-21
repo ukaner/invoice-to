@@ -35,6 +35,7 @@
         <link type="text/css" rel="stylesheet" href="css/style.min.css"/>
         <link rel="stylesheet" href="css/magnific-popup.css">
 
+        <link rel="icon" href="assets/favicon.png">
     </head>
     <body>
         <div class="se-pre-con"></div>
