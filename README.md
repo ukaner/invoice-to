@@ -6,17 +6,16 @@ This repository is the source code of [invoice.to](https://invoice.to), an onlin
 
 Invoice.to is built with PHP and MongoDB, so make sure you have those installed in your development environment. If your contribution requires testing mailing or payment systems, you will need to set up a [Mailgun](https://www.mailgun.com/) and a [Stripe](https://stripe.com/) account as well.
 
-Assuming you have current versions of PHP and MongoDB in your system already, you need to clone the code and install PHP dependencies. Invoice.to uses `composer` and `bower` for dependency management. 
+Assuming you have current versions of PHP and MongoDB in your system already, you need to clone the code and install dependencies. Invoice.to uses `composer` and `bower` for dependency management. 
 
 If you don't have `composer` already, you can [follow this installation guide](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
 
-Bower you can [install](https://bower.io/#install-bower) using `npm`.
+Javascript and CSS dependencies can be [installed using Bower](https://bower.io/#install-bower). It is not necessary to install JS and CSS dependencies in order to run the application, since the assets are compiled into minified assets as part of the development process.
 
 ```sh
 $ git clone https://github.com/ukaner/invoice-to.git
 $ cd invoice-to
 $ composer install
-$ bower install
 ```
 
 Production keys of services that invoice.to uses are not in the code. Instead system receives them from environment variables.
@@ -75,6 +74,16 @@ Don't forget to replace `<DIRECTORY_LOCATION>` with the location of invoice.to d
 `#LoadModule vhost_alias_module libexec/apache2/mod_vhost_alias.so`
 
 Remove `#` letter at the beginning and save the file. Finally restart the Apache by typing `sudo apachectl restart`.
+
+### Building assets
+
+All assets can be compiled using `gulp`. Make sure you compile the assets every time you make a change to either JS or CSS files.
+
+```sh
+$ npm install
+$ bower install
+$ gulp
+```
 
 ## Contributing
 

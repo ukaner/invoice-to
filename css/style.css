@@ -361,10 +361,6 @@ p {
     border-bottom: 1px dashed #DDD;
 }
 
-.fieldsContainer {
-    margin-right: 3em;
-}
-
 .fromToContainer {
     display: -webkit-flex;
     display: flex;
@@ -393,15 +389,6 @@ p {
     -webkit-flex: 3 1 auto;
     flex: 3 1 auto;
     margin-bottom: 0.5em;
-}
-
-.emailBody {
-    display: block;
-    margin: 0.5em 0.5em 0 0;
-}
-
-.sendButtonContainer {
-    width: 103%;
 }
 
 .paidButton {
