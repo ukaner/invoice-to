@@ -1,3 +1,4 @@
 vendor/*
+components/*
 .DS_Store
 .idea/

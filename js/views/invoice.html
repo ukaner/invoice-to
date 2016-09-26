@@ -1,0 +1,164 @@
+<div class="invSectionHeader">
+    <div class="invHeaderItemTitle">
+        <p class="invTitle">INVOICE</p>
+        <p class="invByName" id="invByName" ng-model="invoice.invByName" placeholder="by Your Company" contenteditable="true"></p>
+    </div>
+    <div class="invHeaderItemDate">
+        <p class="invDate" id="invDateTop" ng-model="invoice.invDate" contenteditable="true"></p>
+    </div>
+</div>
+
+<div class="invSectionSummary">
+    <div class="invItemInvTo">
+        <p class="componentTitle">INVOICE TO</p>
+        <div class="">
+            <p id="invToTop" ng-model="invoice.invTo" placeholder="Client Company" contenteditable="true"></p>
+        </div>
+    </div>
+    <div class="invItemPaymentSummary">
+        <p class="invTotal" id="invTotal">{{total() | currency : invoice.currency}}</p>
+        <p class="invDue" ng-style="{'color': invoice.paid ? '#CCCCCC' : '#E67E22'}">Due on <span id="dueDateTop" ng-model="invoice.dueDate" contenteditable="true"></span></p>
+        <div id="stripeButtons">
+            <div id="paidButtonSpan" ng-show="invoice.paid">
+                <button class="paidButton" id="paidButton" disabled>
+                    <i class="fa fa-check-circle"></i> Paid on {{invoice.paymentDate | date : 'mediumDate'}}
+                </button>
+            </div>
+            <div id="connectButtonSpan" ng-show="!invoice.paid && !invoice.stripe.spk">
+                <button class="invButtonConnect" id="connectButton" ng-click="connectStripe()">Connect with Stripe</button>
+            </div>
+            <div id="stripeButtonSpan" ng-show="!invoice.paid && invoice.stripe.spk">
+                <form id="charge-form" action="<?php echo "charge.php?id=".substr($_SERVER['REQUEST_URI'], 1); ?>" method="post">
+                    <button class="invButton" type="button" id="customButton" ng-click="payStripe()">Pay Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="invSectionInvoiceFor">
+    <div class="invFor">
+        <p class="invDescTitle componentTitle">INVOICE FOR</p>
+        <p id="invFor" ng-model="invoice.invFor" placeholder="Project description" contenteditable="true"></p>
+    </div>
+</div>
+
+<div class="invSectionDesc">
+    <div class="invDesc">
+        <h3 class="titleInvoiceDetails">INVOICE DETAILS</h3>
+        <div class="invDescTable">
+            <div class="rowTitleContainer">
+                <div class="row">
+                    <div class="col c1 componentTitle">Description</div>
+                    <div class="col c2 componentTitle">Unit</div>
+                    <div class="col c3 componentTitle">Price (<span id="currency" class="hint" ng-model="currency" contenteditable="true"></span>)</div>
+                    <div class="col c4 componentTitle">Amount</div>
+                    <div class="col c5"></div>
+                </div>
+            </div>
+            <div class="rowItemContainer">
+                <div class="row" ng-repeat="(index, item) in invoice.items">
+                    <div class="col c1"><p ng-model="item.description" contenteditable="true" class="description" placeholder="&nbsp">{{item.description}}</p></div>
+                    <div class="col c2"><p ng-model="item.unit" contenteditable="true" class="unit" placeholder="&nbsp">{{item.unit}}</p></div>
+                    <div class="col c3"><p ng-model="item.price" contenteditable="true" class="price" placeholder="&nbsp">{{item.price}}</p></div>
+                    <div class="col c4"><p>{{item.unit * item.price | currency : invoice.currency}}</p></div>
+                    <div class="col c5"><p><a href="#" class="icon delete-btn" ng-click="deleteItem(index)" ng-show="item.description || item.unit || item.price"><i class="fa fa-times"></i></a></p></div>
+                </div>
+            </div>
+            <div class="row subtotal">
+                <div class="col c1"><p>Subtotal</p></div>
+                <div class="col c2 hide"><p></p></div>
+                <div class="col c3 hide"><p></p></div>
+                <div class="col c4"><p id="subtotal">{{subtotal() | currency : invoice.currency}}</p></div>
+                <div class="col c5"></div>
+            </div>
+            <div class="row vat">
+                <div class="col c1"><p>VAT (<span id="vatp" class="hint" ng-model="invoice.vatp" contenteditable="true">10</span>%)</p></div>
+                <div class="col c2 hide"><p></p></div>
+                <div class="col c3 hide"><p></p></div>
+                <div class="col c4"><p id="vat">{{vat() | currency : invoice.currency}}</p></div>
+                <div class="col c5"></div>
+            </div>
+            <div class="row total">
+                <div class="col c1"><p>TOTAL</p></div>
+                <div class="col c2 hide"><p></p></div>
+                <div class="col c3 hide"><p></p></div>
+                <div class="col c4"><p id="total">{{total() | currency : invoice.currency}}</p></div>
+                <div class="col c5"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="invSectionInfo">
+    <div class="invItemInvInfo">
+        <div class="invInfoByTo">
+            <div class="invInfoBy">
+                <div class="componentTitle">Invoice by</div>
+                <div class="invBy" id="invBy" ng-model="invoice.invBy" placeholder="Your Company" contenteditable="true"></div>
+            </div>
+            <div class="invInfoTo">
+                <div class="componentTitle">Invoice to</div>
+                <div class="invTo" id="invTo" ng-model="invoice.invTo" contenteditable="true"></div>
+            </div>
+        </div>
+        <div class="invInfoContainer">
+            <div class="invInfoDetailsCont">
+                <div class="invInfoDate">
+                    <div class="componentTitle">Invoice date</div>
+                    <div class=""><p ng-model="invoice.invDate" contenteditable="true" id="invDate"></p></div>
+                </div>
+                <div class="invInfoDueDate">
+                    <div class="componentTitle">Due date</div>
+                    <div class=""><p ng-model="invoice.dueDate" contenteditable="true" id="dueDate"></p></div>
+                </div>
+                <div class="invInfoNo">
+                    <div class="componentTitle">Invoice number</div>
+                    <div class=""><p ng-model="invoice.invNumber" placeholder="######" id="invNumber" contenteditable="true"></p></div>
+                </div>
+                <div class="invInfoOther">
+                    <div class="componentTitle">Reference no</div>
+                    <div class=""><p ng-model="invoice.invRef" placeholder="######" id="invRef" contenteditable="true"></p></div>
+                </div>
+
+            </div>
+            <div class="invInfoPaymentDetails">
+                <div class="componentTitle">Payment details</div>
+                <div class=""><p ng-model="invoice.payDetails" placeholder="Bank information" id="payDetails" contenteditable="true"></div>
+            </div>
+            <div class="invTerms">
+                <div class="componentTitle">Invoice Terms</div>
+                <div class=""><p ng-model="invoice.invTerms" placeholder="14 days of notice" id="invTerms" contenteditable="true"></p></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Send popup -->
+<div id="sendPopup" class="sendPopupStyle mfp-hide">
+    <div class="fieldsContainer">
+        <div class="fromToContainer">
+            <div class="sendFrom">
+                <label class="inputLabel">FROM</label>
+                <input class="inputField" type="email" id="sendFrom" ng-blur="validateField(field)"/>
+            </div>
+            <div class="fromToIcon"></div>
+            <div class="sendTo">
+                <label class="inputLabel">TO</label>
+                <input class="inputField" type="email" id="sendTo" ng-blur="validateField(field)"/>
+            </div>
+        </div>
+        <div class="emailBody">
+            <div class="input">
+                <label class="inputLabel">
+                    <span class="inputLabelContent">EMAIL</span>
+                </label>
+                <p class="textArea" id="emailBody" ng-model="email.body" contenteditable="true"></p>
+            </div>
+        </div>
+        <div class="sendButtonContainer">
+            <button class="invButton" id="sendButton" ng-click="sendInvoice()">SEND</button>
+        </div>
+    </div>
+</div>
+<!-- Send popup -->

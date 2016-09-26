@@ -127,5 +127,3 @@ class MongoInvoice {
     return $res;
   }
 }
-
-?>

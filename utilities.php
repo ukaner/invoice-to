@@ -41,17 +41,13 @@ function get_parameter($param_name){
 function getCurrency($currSymbol) {
     switch ($currSymbol) {
         case "$":
-        return "usd";
-        break;
+            return "usd";
         case "€":
-        return "eur";
-        break;
+            return "eur";
         case "£":
-        return "gbp";
-        break;
+            return "gbp";
         default:
-        return "";
-        break;
+            return $currSymbol;
     }
 }
 
@@ -65,5 +61,3 @@ function putStripeError($e) {
     print('Param is:' . $err['param'] . "\n");
     print('Message is:' . $err['message'] . "\n");
 }
-
-?>

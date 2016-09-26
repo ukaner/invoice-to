@@ -1,10 +1,9 @@
 <?php
 require_once 'config.php';
 require_once 'utilities.php';
-require_once('vendor/autoload.php');
-require_once('mongo.php');
+require_once 'vendor/autoload.php';
+require_once 'mongo.php';
 
-////////
 $error = get_parameter('error');
 $error_description = get_parameter('error_description');
 $scope = get_parameter('scope');
@@ -46,11 +45,7 @@ if ($scope && $code) {
 
 
 } else if ($error || $error_description) {
-    // Error
     $s = "Error: ".$error." - ".$error_description;
 }
 
-require_once 'index.thtml';
-
-
-?>
+require_once 'index.html';

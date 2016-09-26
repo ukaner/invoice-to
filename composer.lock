@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e7f9ee996bdf6f585c95d7cefefce852",
-    "content-hash": "56e8d6f44af5c8c62d235281d22055ed",
+    "hash": "658273ce126054f1934ce6c93de5c9a2",
+    "content-hash": "95f470ed92f9150d648ab90f1dc4eca1",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -229,16 +229,16 @@
         },
         {
             "name": "mailgun/mailgun-php",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailgun/mailgun-php.git",
-                "reference": "88a3e96733cbcda181980a36d074901304ac8f14"
+                "reference": "54b7f851b8e0241d593897dc2d50906bf4a43995"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailgun/mailgun-php/zipball/88a3e96733cbcda181980a36d074901304ac8f14",
-                "reference": "88a3e96733cbcda181980a36d074901304ac8f14",
+                "url": "https://api.github.com/repos/mailgun/mailgun-php/zipball/54b7f851b8e0241d593897dc2d50906bf4a43995",
+                "reference": "54b7f851b8e0241d593897dc2d50906bf4a43995",
                 "shasum": ""
             },
             "require": {
@@ -255,7 +255,6 @@
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "Mailgun\\Tests": "tests/",
                     "Mailgun": "src/"
                 }
             },
@@ -270,7 +269,7 @@
                 }
             ],
             "description": "The Mailgun SDK provides methods for all API functions.",
-            "time": "2016-07-21 08:54:55"
+            "time": "2016-08-10 16:58:18"
         },
         {
             "name": "paragonie/random_compat",
@@ -444,16 +443,16 @@
         },
         {
             "name": "php-http/httplug",
-            "version": "v1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/httplug.git",
-                "reference": "2061047ca53a08a6b8f52e997b2a76f386b397dd"
+                "reference": "1c6381726c18579c4ca2ef1ec1498fdae8bdf018"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/httplug/zipball/2061047ca53a08a6b8f52e997b2a76f386b397dd",
-                "reference": "2061047ca53a08a6b8f52e997b2a76f386b397dd",
+                "url": "https://api.github.com/repos/php-http/httplug/zipball/1c6381726c18579c4ca2ef1ec1498fdae8bdf018",
+                "reference": "1c6381726c18579c4ca2ef1ec1498fdae8bdf018",
                 "shasum": ""
             },
             "require": {
@@ -496,7 +495,7 @@
                 "client",
                 "http"
             ],
-            "time": "2016-01-26 14:34:50"
+            "time": "2016-08-31 08:30:17"
         },
         {
             "name": "php-http/message",
@@ -616,16 +615,16 @@
         },
         {
             "name": "php-http/multipart-stream-builder",
-            "version": "0.1.0",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/multipart-stream-builder.git",
-                "reference": "cd04192f1e8d3c19552783dda6f7aa6a72a89b23"
+                "reference": "29f8b0a9e00ebaa7cbf0f2f0f7db4e0bc3f403d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/multipart-stream-builder/zipball/cd04192f1e8d3c19552783dda6f7aa6a72a89b23",
-                "reference": "cd04192f1e8d3c19552783dda6f7aa6a72a89b23",
+                "url": "https://api.github.com/repos/php-http/multipart-stream-builder/zipball/29f8b0a9e00ebaa7cbf0f2f0f7db4e0bc3f403d2",
+                "reference": "29f8b0a9e00ebaa7cbf0f2f0f7db4e0bc3f403d2",
                 "shasum": ""
             },
             "require": {
@@ -668,7 +667,7 @@
                 "message",
                 "stream"
             ],
-            "time": "2016-07-19 12:20:48"
+            "time": "2016-08-31 10:13:17"
         },
         {
             "name": "php-http/promise",
@@ -772,16 +771,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v3.19.0",
+            "version": "v3.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "113d1092833e1cd17f67b3b598a39e4ebb82e53c"
+                "reference": "c8c8d384636b6b78c4c17e2b00102e914f0b7cc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/113d1092833e1cd17f67b3b598a39e4ebb82e53c",
-                "reference": "113d1092833e1cd17f67b3b598a39e4ebb82e53c",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/c8c8d384636b6b78c4c17e2b00102e914f0b7cc5",
+                "reference": "c8c8d384636b6b78c4c17e2b00102e914f0b7cc5",
                 "shasum": ""
             },
             "require": {
@@ -823,7 +822,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2016-07-29 18:25:24"
+            "time": "2016-09-13 18:14:15"
         }
     ],
     "packages-dev": [],
@@ -832,8 +831,6 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": {
-        "ext-mongo": "*"
-    },
+    "platform": [],
     "platform-dev": []
 }
