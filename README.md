@@ -6,12 +6,17 @@ This repository is the source code of [invoice.to](https://invoice.to), an onlin
 
 Invoice.to is built with PHP and MongoDB, so make sure you have those installed in your development environment. If your contribution requires testing mailing or payment systems, you will need to set up a [Mailgun](https://www.mailgun.com/) and a [Stripe](https://stripe.com/) account as well.
 
-Assuming you have current versions of PHP and MongoDB in your system already, you need to clone the code and install PHP dependencies. Invoice.to uses `composer` for dependency management. If you don't have `composer` already, you can [follow this installation guide](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx). If you already have `composer`, let's continue.
+Assuming you have current versions of PHP and MongoDB in your system already, you need to clone the code and install PHP dependencies. Invoice.to uses `composer` and `bower` for dependency management. 
+
+If you don't have `composer` already, you can [follow this installation guide](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
+
+Bower you can [install](https://bower.io/#install-bower) using `npm`.
 
 ```sh
 $ git clone https://github.com/ukaner/invoice-to.git
 $ cd invoice-to
 $ composer install
+$ bower install
 ```
 
 Production keys of services that invoice.to uses are not in the code. Instead system receives them from environment variables.
