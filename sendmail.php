@@ -22,8 +22,6 @@ try {
         'subject' => $mailSubject,
         'html' => $mailBody
     ]);
-    echo true;
 } catch (Exception $e) {
     die('A mandrill error occurred: ' . get_class($e) . ' - ' . $e->getMessage());
 }
-?>

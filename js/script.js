@@ -1,5 +1,4 @@
 var baseURL = window.location.protocol + '//' + window.location.host + '/';
-var invoiceID;
 
 var app = angular.module('Application', ['ngResource']);
 
@@ -16,6 +15,23 @@ app.value('config', {
 });
 
 app.value('templateBase', 'js/views');
+
+app.factory('Api', function($resource) {
+    var URL = baseURL + 'api.php';
+    return $resource(URL);
+});
+
+app.factory('Sendmail', function($resource) {
+    var URL = baseURL + 'sendmail.php';
+    return $resource(URL);
+});
+
+app.filter('currency', function(currencyCodes) {
+    return function(input, currency) {
+        var value = input.toFixed(2);
+        return currencyCodes.hasOwnProperty(currency) ? currencyCodes[currency] + value : value;
+    };
+});
 
 app.directive("contenteditable", function() {
     return {
@@ -35,26 +51,9 @@ app.directive("contenteditable", function() {
     };
 });
 
-app.factory('Api', function($resource) {
-    var URL = baseURL + 'api.php';
-    return $resource(URL);
-});
-
-app.factory('Sendmail', function($resource) {
-    var URL = baseURL + 'sendmail.php';
-    return $resource(URL);
-});
-
-app.filter('currency', function(currencyCodes) {
-    return function(input, currency) {
-        var value = input.toFixed(2);
-        return currencyCodes.hasOwnProperty(currency) ? currencyCodes[currency] + value : value;
-    };
-});
-
 app.controller('ApplicationController', ApplicationController);
-ApplicationController.$inject = ['$scope', 'currencyCodes'];
-function ApplicationController($scope, currencyCodes) {
+ApplicationController.$inject = ['$scope'];
+function ApplicationController($scope) {
     var body = document.body;
     var content = document.querySelector('.content-wrap');
     var openBtn = document.getElementById('open-button');
@@ -98,9 +97,7 @@ function ApplicationController($scope, currencyCodes) {
     page('/:id', invoice);
     page();
 
-    function init() {
-        $scope.stripeButtonVisible = true;
-    }
+    function init() {}
 
     function about() {
         init();
@@ -114,7 +111,7 @@ function ApplicationController($scope, currencyCodes) {
         init();
         simpleStorage.flush();
         document.title = "Invoice";
-        ctrl.invoice_id = context.params.id;
+        ctrl.invoiceId = context.params.id;
         $('meta[name=robots]').attr('content', 'noindex');
     }
 
@@ -142,7 +139,7 @@ function InvoiceDirective(templateBase) {
             return templateBase + '/invoice.html';
         },
         bindToController: {
-            invoice_id: '='
+            invoiceId: '='
         },
         link: function() {
             $("#invByName").focus();
@@ -151,11 +148,13 @@ function InvoiceDirective(templateBase) {
 }
 
 app.controller('InvoiceController', InvoiceController);
-InvoiceController.$inject = ['$scope', '$filter', 'config', 'currencyCodes', 'Api', 'Sendmail'];
-function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail) {
+InvoiceController.$inject = ['$scope', '$filter', '$compile', 'config', 'currencyCodes', 'Api', 'Sendmail'];
+function InvoiceController($scope, $filter, $compile, config, currencyCodes, Api, Sendmail) {
     var ctrl = this;
     var todayDate = $filter('date')(new Date(), 'mediumDate');
     var dueDate = $filter('date')((new Date()).addDays(config.dueDays), 'mediumDate');
+
+    $scope.viewMode = false;
 
     $scope.invoice = {
         items: [],
@@ -180,7 +179,7 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
         }
     };
 
-    $scope.$watch('ctrl.invoice_id', function(data) {
+    $scope.$watch('ctrl.invoiceId', function(data) {
         if (typeof data === 'undefined') {
             ctrl.loadFromLocal();
             if (window.hasOwnProperty('stripe_spk')) {
@@ -191,15 +190,19 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
                 };
             }
         } else {
+            $scope.viewMode = true;
             ctrl.loadFromMongo();
         }
         $scope.currency = $scope.invoice.currency;
     });
 
     $scope.$watch('invoice', function() {
-        ctrl.hasEmptyRow() == false && $scope.addItem();
-        ctrl.saveToLocal();
-        $(".unit, .price").numeric({negative: false});
+        if ($scope.viewMode == false) {
+            ctrl.updateEmailBody();
+            ctrl.hasEmptyRow() == false && $scope.addItem();
+            ctrl.saveToLocal();
+            $(".unit, .price").numeric({negative: false});
+        }
     }, true);
 
     $scope.$watch('currency', function(currency) {
@@ -213,7 +216,7 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
         from: '',
         to: '',
         body: '<p>Hi there,</p><br/>' +
-        '<p>Was pleasure working with you on ' + $scope.invoice.invFor + '. Appreciate your business and timely payment.</p><br/>' +
+        '<p>Was pleasure working with you on <invFor></invFor>. Appreciate your business and timely payment.</p><br/>' +
         '<p class="invLink" id="invLink">(The invoice link will be here)</p><br/>' +
         '<p>Sincerely,</p>' +
         '<p id="senderName">Jack Smith</p>'
@@ -239,51 +242,71 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
     };
 
     ctrl.loadFromMongo = function() {
-        var payload = angular.toJson({
+        var query = {
             type: 'get',
-            invID: ctrl.invoice_id
-        });
+            invID: ctrl.invoiceId
+        };
 
-        Api.save({}, payload, function(response) {
-            var invoice = JSON.parse(response);
+        var matchCurrencySymbol = function(symbol) {
+            for (var prop in currencyCodes) {
+                if (prop === symbol.toLowerCase()) {
+                    return prop;
+                }
+                if (currencyCodes[prop] === symbol) {
+                    return prop;
+                }
+            }
+            return '';
+        };
+
+        Api.get(query, function(response) {
             $scope.invoice = {
                 items: [],
-                currency: invoice.currency,
-                invNumber: invoice.invNumber,
-                invBy: invoice.invBy,
-                invByName: invoice.invByName,
-                invDate: invoice.invDate,
-                invTo: invoice.invTo,
-                invFor: invoice.invFor,
-                invRef: invoice.invRef,
-                invTerms: invoice.invTerms,
-                dueDate: invoice.dueDate,
-                paymentDate: invoice.paymentDate,
-                payDetails: invoice.payDetails,
-                vatp: invoice.vatp,
-                paid: invoice.paid,
+                currency: matchCurrencySymbol(response.currency),
+                invNumber: response.invNumber,
+                invBy: response.invBy,
+                invByName: response.invByName,
+                invDate: response.invDate,
+                invTo: response.invTo,
+                invFor: response.invFor,
+                invRef: response.invRef,
+                invTerms: response.invTerms,
+                dueDate: response.dueDate,
+                paymentDate: response.paymentDate,
+                payDetails: response.payDetails,
+                vatp: response.vatp,
+                paid: response.paid ? (response.paid !== 'false') : false,
                 stripe: {
-                    spk: invoice.spk,
-                    at: invoice.at,
-                    su: invoice.su
-                }
+                    spk: response.spk,
+                    at: response.at,
+                    su: response.su
+                },
+                invId: response.invId
             };
 
             var isItemDescProperty = function(prop) {
-                return prop.toString().substr(0, 4) === 'itemDesc';
+                var match = 'itemDesc';
+                return prop.toString().substr(0, match.length) === match;
             };
-            var itemDescProperties = Object.getOwnPropertyNames(invoice).filter(isItemDescProperty).sort();
+            var itemDescProperties = Object.getOwnPropertyNames(response).filter(isItemDescProperty).sort();
+
             angular.forEach(itemDescProperties, function(property) {
-                $scope.invoice.items.push({
-                    description: invoice[property],
-                    unit: invoice[property.replace('Desc', 'Hour')],
-                    price: invoice[property.replace('Desc', 'Price')]
-                });
+                var description = response[property];
+                var unit = response[property.replace('Desc', 'Hour')];
+                var price = response[property.replace('Desc', 'Price')];
+                if (description.length) {
+                    $scope.invoice.items.push({
+                        description: description,
+                        unit: unit,
+                        price: price
+                    });
+                }
             });
+
             $("#menuSendInvoice").remove();
-            $("#menuGenerateInvoice").remove();
-            $('.delete-btn').hide();
-            $('[contenteditable]').removeAttr('contenteditable');
+            setTimeout(function() {
+                $('[contenteditable]').removeAttr('contenteditable');
+            }, 0);
 
         }, function(error) {
             console.log('Error', error);
@@ -306,27 +329,27 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
         });
 
         var payload = angular.toJson({
-            type: 'create',
-            paid: $scope.invoice.paid,
-            staticData: $scope.invoice,
-            desc: desc,
-            hour: hour,
-            price: price,
-            totalPrice: $scope.total(),
-            currency: $scope.invoice.currency,
-            spk: $scope.invoice.stripe.spk,
-            at: $scope.invoice.stripe.at,
-            su: $scope.invoice.stripe.su
+            invoice: {
+                paid: $scope.invoice.paid,
+                staticData: $scope.invoice,
+                desc: desc,
+                hour: hour,
+                price: price,
+                totalPrice: $scope.total(),
+                currency: $scope.invoice.currency,
+                spk: $scope.invoice.stripe.spk,
+                at: $scope.invoice.stripe.at,
+                su: $scope.invoice.stripe.su
+            }
         });
 
-        Api.save({}, payload, function(response) {
-            var invoice = JSON.parse(response);
-            if (invoice.invId) {
-                ctrl.invoice_id = invoice.invId;
+        Api.save({type: 'create'}, payload, function(response) {
+            if (response.invId) {
+                ctrl.invoiceId = response.invId;
                 if (intent == "send") {
                     ctrl.sendMail();
                 } else {
-                    window.location.href = baseURL + ctrl.invoice_id;
+                    window.location.href = baseURL + ctrl.invoiceId;
                 }
             } else {
                 console.log("Missing invoice ID");
@@ -384,15 +407,16 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
         $("#sendButton").prop("disabled", true);
         if (!isValidEmailAddress($scope.email.from) || !isValidEmailAddress($scope.email.to) || $scope.email.body == "") {
             shake($("#sendPopup"));
-            $scope.validateField($("#sendFrom"));
-            $scope.validateField($("#sendTo"));
+            $scope.validateField("#sendFrom");
+            $scope.validateField("#sendTo");
         } else {
             ctrl.saveToMongo("send");
         }
         $("#sendButton").prop("disabled", false);
     };
 
-    $scope.validateField = function(field) {
+    $scope.validateField = function(id) {
+        var field = $(id);
         if (!isValidEmailAddress(field.val())) {
             field.removeClass("inputField");
             field.addClass("inputFieldError");
@@ -401,6 +425,37 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
             field.addClass("inputField");
             field.removeClass("inputFieldError");
         }
+    };
+
+    ctrl.sendMail = function() {
+        var mailSubject = "You've got invoice!";
+        var mailBody = prepareEmailBody($scope.email.body);
+        var request = {
+            from_email: $scope.email.from,
+            mailTo: $scope.email.to,
+            mailFrom: $scope.email.from,
+            mailSubject: mailSubject,
+            mailBody: mailBody
+        };
+        Sendmail.get(request, function(response) {
+            var mongoData = angular.toJson({
+                invId: ctrl.invoiceId,
+                senderEmail: $scope.email.from,
+                receiverEmail: $scope.email.to
+            });
+            Api.save({type: 'save_email'}, mongoData, function(response) {
+                window.location.href = baseURL + ctrl.invoiceId;
+            }, function(error) {
+                console.log('Error', error);
+            });
+        }, function(error) {
+            console.log('Error', error);
+        });
+    };
+
+    ctrl.updateEmailBody = function() {
+        var re = /(<invFor\b[^>]*>)[^<>]*(<\/invFor>)/i;
+        $scope.email.body = $scope.email.body.replace(re, "$1" + $scope.invoice.invFor + "$2");
     };
 
     function shake(arg) {
@@ -412,33 +467,6 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
         return pattern.test(emailAddress);
     }
 
-    ctrl.sendMail = function() {
-        var mailSubject = "You've got invoice!";
-        var mailBody = prepareEmailBody($scope.email.body);
-        var payload = angular.toJson({
-            from_email: $scope.email.from,
-            mailTo: $scope.email.to,
-            mailFrom: $scope.email.from,
-            mailSubject: mailSubject,
-            mailBody: mailBody
-        });
-        Sendmail.save({}, payload, function(response) {
-            var mongoData = angular.toJson({
-                type: 'save_email',
-                invId: ctrl.invoice_id,
-                senderEmail: $scope.email.from,
-                receiverEmail: $scope.email.to
-            });
-            Api.save({}, mongoData, function(response) {
-                window.location.href = baseURL + ctrl.invoice_id;
-            }, function(error) {
-                console.log('Error', error);
-            });
-        }, function(error) {
-            console.log('Error', error);
-        });
-    };
-
     function prepareEmailBody(html) {
         var wrapped = $("<div>" + html.trim() + "</div>");
         var paragraphs = $(wrapped).find("p");
@@ -446,7 +474,7 @@ function InvoiceController($scope, $filter, config, currencyCodes, Api, Sendmail
 
         for (var i = 0; i < paragraphs.length; i++) {
             if ($(paragraphs[i]).attr("id") == "invLink") {
-                var url = baseURL + invoiceID;
+                var url = baseURL + ctrl.invoiceId;
                 result += url;
             } else {
                 var s = "<p>" + $(paragraphs[i]).text() + "</p>";

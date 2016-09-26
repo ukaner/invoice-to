@@ -577,7 +577,7 @@ p {
 @media print {
     .menu-wrap,
     .menu-button,
-    .invButtonConnect,
+    #stripeButtons,
     .col.c5 > * {
         display: none !important;
     }

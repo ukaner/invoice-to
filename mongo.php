@@ -30,44 +30,30 @@ class MongoInvoice {
   // returns the corresponding invoice
   public function get ($invId) {
     global $collection;
-
     $parseRecord = $collection->findOne([ 'invId' => $invId ]);
-
     if (!!$parseRecord) return $parseRecord;
-
     return $collection->findOne([ '_id' => new MongoId(base64_decode($invId)) ]);
   }
 
-  public function save ($invId) {
+  public function save ($invId, $data) {
     global $collection;
 
-    // Get variables
-    $paid = get_parameter('paid');
-    $staticData = get_parameter('staticData');
-    $totalPrice = get_parameter('totalPrice');
-    $currency = get_parameter('currency');
-    $rowCount = intval(get_parameter('rowCount'));
-    $spk = get_parameter('spk');
-    $at = get_parameter('at');
-    $su = get_parameter('su');
-    $desc = get_parameter('desc');
-    $hour = get_parameter('hour');
-    $price = get_parameter('price');
-
     $invoice = [
-      'totalPrice' => $totalPrice,
-      'currency' => $currency,
+      'totalPrice' => $data->totalPrice,
+      'currency' => $data->currency,
       'paid' => 'false',
-      'rowCount' => $rowCount,
       'invId' => $invId
     ];
 
-    foreach ($staticData as $key => $value) {
+    foreach ($data->staticData as $key => $value) {
       $invoice[$key] = $value;
     }
 
-    // items the client is charged for
-    for ($i = 0; $i <= $rowCount; $i++) {
+    $desc = $data->desc;
+    $hour = $data->hour;
+    $price = $data->price;
+
+    for ($i = 0; $i < count($desc); $i++) {
       $postfix = $i + 1;
 
       if (isset($desc[$i])) {
@@ -89,31 +75,36 @@ class MongoInvoice {
       }
     }
 
-    if ($spk != '') $invoice['spk'] = $spk;
-    if ($at != '') $invoice['at'] = $at;
-    if ($su != '') $invoice['su'] = $su;
+    if ($data->spk) {
+        $invoice['spk'] = $data->spk;
+    }
+    if ($data->at) {
+      $invoice['at'] = $data->at;
+    }
+    if ($data->su) {
+      $invoice['su'] = $data->su;
+    }
 
-    // Inserting final object to database
     $res = $collection->insert($invoice);
     $res['obj'] = $invoice;
     return $res;
   }
 
   // Saves receiver and sender mail addresses after an invoice is mailed.
-  public function save_email () {
+  public function save_email($data) {
     global $collection;
 
     $res = $collection->update([
-        '_id' => new MongoId(base64_decode(get_parameter('invId')))
+        '_id' => new MongoId($data->invId)
       ], [
         '$set' => [
-          'senderEmail' => get_parameter('senderEmail'),
-          'receiverEmail' => get_parameter('receiverEmail')
+          'senderEmail' => $data->senderEmail,
+          'receiverEmail' => $data->receiverEmail
         ]
       ]
     );
 
-    $res['id'] = base64_decode(get_parameter('invId'));
+    $res['id'] = $data->invId;
     return $res;
   }
 

@@ -38,7 +38,8 @@ try {
     // Creates a new invoice with information from GET parameters
     case 'create':
       $invId = newObjectId(10);
-      $res = $mongo->save($invId);
+      $input = json_decode(file_get_contents('php://input'));
+      $res = $mongo->save($invId, $input->invoice);
 
       if ($res['ok']) {
         die(json_encode([ 'invId' => $invId ]));
@@ -53,7 +54,8 @@ try {
 
     // Saves receiver and sender mail addresses to database
     case 'save_email':
-      $res = $mongo->save_email();
+      $input = json_decode(file_get_contents('php://input'));
+      $res = $mongo->save_email($input);
       $invId = $res['invId'];
 
       // Check if invoice inserted to MongoDB successfully
@@ -90,5 +92,3 @@ try {
     die(json_encode(['error' => 'Failed to create new object']));
   }
 }
-
-?>

@@ -70,8 +70,8 @@ $.fn.numeric.keypress = function(e)
 	{
 		return false;
 	}
-	//dont allow #, $, %
-	else if(key == 35 || key == 36 || key == 37){
+	//dont allow #, $, %, '
+	else if(key == 35 || key == 36 || key == 37 || key == 39){
 		return false;
 	}
 	var allow = false;

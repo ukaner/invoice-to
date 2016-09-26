@@ -24,7 +24,7 @@
                     <i class="fa fa-check-circle"></i> Paid on {{invoice.paymentDate | date : 'mediumDate'}}
                 </button>
             </div>
-            <div id="connectButtonSpan" ng-show="!invoice.paid && !invoice.stripe.spk">
+            <div id="connectButtonSpan" ng-show="!invoice.paid && !invoice.stripe.spk && !viewMode">
                 <button class="invButtonConnect" id="connectButton" ng-click="connectStripe()">Connect with Stripe</button>
             </div>
             <div id="stripeButtonSpan" ng-show="!invoice.paid && invoice.stripe.spk">
@@ -62,7 +62,7 @@
                     <div class="col c2"><p ng-model="item.unit" contenteditable="true" class="unit" placeholder="&nbsp">{{item.unit}}</p></div>
                     <div class="col c3"><p ng-model="item.price" contenteditable="true" class="price" placeholder="&nbsp">{{item.price}}</p></div>
                     <div class="col c4"><p>{{item.unit * item.price | currency : invoice.currency}}</p></div>
-                    <div class="col c5"><p><a href="#" class="icon delete-btn" ng-click="deleteItem(index)" ng-show="item.description || item.unit || item.price"><i class="fa fa-times"></i></a></p></div>
+                    <div class="col c5"><p><a href="#" class="icon delete-btn" ng-click="deleteItem(index)" ng-show="(item.description || item.unit || item.price) && !viewMode"><i class="fa fa-times"></i></a></p></div>
                 </div>
             </div>
             <div class="row subtotal">
@@ -140,12 +140,12 @@
         <div class="fromToContainer">
             <div class="sendFrom">
                 <label class="inputLabel">FROM</label>
-                <input class="inputField" type="email" id="sendFrom" ng-blur="validateField(field)"/>
+                <input class="inputField" type="email" id="sendFrom" ng-model="email.from" ng-blur="validateField('#sendFrom')"/>
             </div>
             <div class="fromToIcon"></div>
             <div class="sendTo">
                 <label class="inputLabel">TO</label>
-                <input class="inputField" type="email" id="sendTo" ng-blur="validateField(field)"/>
+                <input class="inputField" type="email" id="sendTo" ng-model="email.to" ng-blur="validateField('#sendTo')"/>
             </div>
         </div>
         <div class="emailBody">

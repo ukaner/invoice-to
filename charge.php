@@ -54,7 +54,7 @@ try {
                 $invoice['paid'] = true;
                 $mongo->update($invoice['_id']->{'$id'}, [
                     '$set' => [
-                        'paid' => 'true',
+                        'paid' => true,
                         'paymentDate' => '' . $charge->created
                     ]
                 ]);
