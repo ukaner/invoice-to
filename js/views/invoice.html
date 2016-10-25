@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div class="rowItemContainer">
-                <div class="row" ng-repeat="(index, item) in invoice.items">
+                <div class="row" ng-repeat="(index, item) in invoice.items track by $index">
                     <div class="col c1"><p ng-model="item.description" contenteditable="true" class="description" placeholder="&nbsp">{{item.description}}</p></div>
                     <div class="col c2"><p ng-model="item.unit" contenteditable="true" class="unit" placeholder="&nbsp">{{item.unit}}</p></div>
                     <div class="col c3"><p ng-model="item.price" contenteditable="true" class="price" placeholder="&nbsp">{{item.price}}</p></div>
