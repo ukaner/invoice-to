@@ -23,11 +23,9 @@ function newObjectId ($size) {
   return $objectId;
 }
 
-
 try {
   // Initialize library
   $mongo = new MongoInvoice();
-
   switch (get_parameter('type')) {
     // Returns information of the invoice that has given invitation ID
     case 'get':

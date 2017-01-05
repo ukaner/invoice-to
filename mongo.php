@@ -19,6 +19,7 @@ $db_name = preg_replace('/\/(.*)/', '$1', $url['path']);
 $db = $m->selectDB($db_name);
 $collection = $db->selectCollection('invoices');
 
+
 class MongoInvoice {
 
   public function getCollection () {
@@ -93,16 +94,17 @@ class MongoInvoice {
   // Saves receiver and sender mail addresses after an invoice is mailed.
   public function save_email($data) {
     global $collection;
-
-    $res = $collection->update([
-        '_id' => new MongoId($data->invId)
-      ], [
-        '$set' => [
-          'senderEmail' => $data->senderEmail,
-          'receiverEmail' => $data->receiverEmail
-        ]
-      ]
-    );
+    try {
+      $res = $collection->update(['invId' => $data->invId], [
+              '$set' => [
+                  'senderEmail' => $data->senderEmail,
+                  'receiverEmail' => $data->receiverEmail
+              ]
+          ]
+      );
+    } catch (\Exception $e) {
+      die(json_encode(['error' => $e->getMessage()]));
+    }
 
     $res['id'] = $data->invId;
     return $res;
@@ -110,11 +112,7 @@ class MongoInvoice {
 
   public function update ($invId, $updatedValues) {
     global $collection;
-
-    $res = $collection->update([
-      '_id' => new MongoId($invId)
-    ], $updatedValues);
-
+    $res = $collection->update(['invId' => $invId], $updatedValues);
     return $res;
   }
 }
