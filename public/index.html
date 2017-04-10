@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Invoice.to - Invoice Generator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="description" content="Generate, send and get paid. Elegant invoice template for web and mobile powered by Stripe" />
+        <meta name="keywords" content="invoice generator, invoice template, invoice" />
+        <meta name="author" content="Ugur Kaner">
+        <meta name="robots" content="index, follow">
+        <meta name="revisit-after" content="3 month">
+        <meta name="google-site-verification" content="82gOBDV6yHPsxjRpB5rKZtbvAVVGjGT22Un-871HfSw" />
+
+        <base href="/">
+
+        <link rel="stylesheet" type="text/css" href="css/build/styles.build.css">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic" type="text/css">
+
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+        <script type="text/javascript" src="//mandrillapp.com/api/docs/js/mandrill.js"></script>
+        <script type="text/javascript" src="//checkout.stripe.com/v2/checkout.js"></script>
+
+        <!--<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
+        <script type="text/javascript" src="js/build/scripts.build.js"></script>
+
+        <link rel="icon" href="assets/favicon.png">
+    </head>
+    <body ng-app="Application">
+        <div class="container" ng-controller="ApplicationController as ctrl">
+            <!-- Menu -->
+            <div class="menu-wrap">
+                <nav class="menu">
+                    <div class="icon-list" id="icon-list">
+                        <a href="#" id="menuConnect" ng-click="connectGoogle()"><i class="fa fa-fw fa-plus-square-o"></i><span>Connect</span></a>
+                        <a href="#" id="menuNewInvoice" ng-click="clearInvoice()"><i class="fa fa-fw fa-plus-square-o"></i><span>New</span></a>
+                        <a href="#sendPopup" id="menuSendInvoice" class="openPopupLink"><i class="fa fa-fw fa-paper-plane"></i><span>Send</span></a>
+                        <a href="#" ng-click="printInvoice()"><i class="fa fa-fw fa-print"></i><span>Print</span></a>
+                        <a href="https://trello.com/b/9Uhj7bdx/invoice-to" id="trello" target="_blank"><i class="fa fa-fw fa-check-square-o"></i><span>Roadmap</span></a>
+                        <a href="#aboutPopup" id="menuAbout" class="openPopupLink"><i class="fa fa-fw fa-info-circle"></i><span>About</span></a>
+                    </div>
+                </nav>
+                <button class="close-button" id="close-button">Close Menu</button>
+            </div>
+            <button class="menu-button" id="open-button">Open Menu</button>
+            <!-- Menu -->
+            <!-- BETA -->
+            <div style="width:100%; display:none;">
+                <div class="badge" style="position:absolute; right:0.5em; margin:1em; padding:0 0.3em 0 0.3em; z-index:1003; background-color:#FF5E5E; color:white;">
+                    <p>BETA</p>
+                </div>
+            </div>
+            <!-- BETA -->
+            <div class="content-wrap">
+                <div class="content">
+                    <div class="invContainer">
+                        <invoice class="invBody" invoice_id="ctrl.invoiceId" template="template"></invoice>
+                    </div>
+                    <!-- About popup -->
+                    <div id="aboutPopup" class="aboutPopupStyle mfp-hide">
+                        <p><br/>Generate, send &amp; get paid. Elegant invoice template for web &amp; mobile.</p>
+                        <p><br/>Standard Stripe costs apply (2.9% + 30&cent;). No additional fees.</p>
+                        <p><br/><a href="http://invoice.to" title="Invoice Generator">Invoice.to</a> is <u>experimental</u>. For feedback, reach me at <a href="https://www.twitter.com/ugurkaner" target="_blank">@ugurkaner</a>.</p>
+                        <p><br/>You can support this project with a simple <a href="http://ctt.ec/t1JZ_" target="_blank">tweet</a> (you can edit before sending).</p>
+                        <p><br/></p>
+                    </div>
+                    <!-- About popup -->
+                    <!-- Footer -->
+                    <div class="footer">
+                        <p>Designed &amp; coded with care in San Francisco <a href="https://www.twitter.com/ugurkaner" title="Ugur Kaner" target="_blank"> @ugurkaner</a>
+                            <span class="experimental-notice"><br/>This website is <u>experimental</u>. Use "as is" and at your own risk.</span>
+                            <span class="tc"><br/>By using this website you accept <a href="terms.html" target="_blank">Terms &amp; Conditions</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></span>
+                        </p>
+                    </div>
+                    <!-- Footer -->
+                    <!-- Send confirmation -->
+                    <div id="sendConfirmation" class="sendPopupStyle mfp-hide">
+                        <div class="fieldsContainer">
+                            <div>Your invoce is sent!
+                            </div>
+                            <div class="sendButtonContainer">
+                                <div class="blueButton">DONE</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Send confirmation -->
+                </div>
+            </div>
+        </div>
+        <!--<?php if (isset($res)) { ?>-->
+            <!--<script>-->
+                <!--var stripe_spk = "<?= $res->stripe_publishable_key ?>";-->
+                <!--var stripe_at = "<?= $res->access_token ?>";-->
+                <!--var stripe_su = "<?= $res->stripe_user_id ?>";-->
+            <!--</script>-->
+        <!--<?php } ?>-->
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-59162135-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </body>
+</html>

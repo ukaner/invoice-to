@@ -1,0 +1,13 @@
+apns==2.0.1
+feedparser==5.2.1
+jsonpickle==0.9.4
+numpy==1.12.0
+pymongo==3.2.1
+requests==2.9.1
+requests-oauthlib==0.7.0
+six==1.10.0
+sockjs-tornado==1.0.2
+stripe==1.48.1
+tornado==4.3
+tweepy==3.5.0
+virtualenv==15.0.2
